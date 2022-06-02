@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:easily/models/user_model.dart';
 import 'package:easily/pages/homepage/homepage.dart';
 import 'package:easily/services/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -15,13 +16,12 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 
-import '../../widgets/dialog.dart';
-
 class AuthCtrl extends GetxController {
   bool hasInternet = false;
   UserModel user =
       UserModel(superuser: false, rating: 0, numberOfRatings: 0, reviews: []);
   final GoogleSignIn googleSignIn = GoogleSignIn();
+  final FirebaseAuth auth = FirebaseAuth.instance;
   bool? isAuth;
   // final dlCtrl = Get.put<DynamicLinkCtrl>(DynamicLinkCtrl());
   Dio dio = Dio();
@@ -39,8 +39,18 @@ class AuthCtrl extends GetxController {
     await googleSignIn.disconnect();
   }
 
+  phoneAuthWeb(){
+
+  }
+
   googleLogin() async {
-    await googleSignIn.signIn();
+  final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+  final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+  final credential = GoogleAuthProvider.credential(
+    accessToken: googleAuth?.accessToken,
+    idToken: googleAuth?.idToken,
+  );
+  return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   createUserDb(GoogleSignInAccount gUser) async {
@@ -274,4 +284,6 @@ class AuthCtrl extends GetxController {
       });
     }
   }
+
+
 }

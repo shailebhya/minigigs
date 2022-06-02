@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../../demo.dart';
+
 class Profile extends StatelessWidget {
   const Profile({Key? key}) : super(key: key);
   // final authCtrl = Get.<AuthCtrl>find();
@@ -187,7 +189,14 @@ class Profile extends StatelessWidget {
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 16)),
-                                          onPressed: () => null),
+                                          onPressed: () {
+                                             Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => VerifyPhoneNumberScreen(phoneNumber: '+919334741294'),
+    ),
+  );
+                                          }),
                                     )
                                   : Text(
                                       _.user.phoneNumber ?? "123456789",
