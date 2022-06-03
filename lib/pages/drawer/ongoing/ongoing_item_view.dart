@@ -23,12 +23,12 @@ class OngoingItemView extends StatelessWidget {
           Padding(
               padding: const EdgeInsets.only(right: 10.0),
               child: PopupMenuButton(
-                  icon: Icon(
+                  icon:const  Icon(
                     Icons.more_vert_rounded,
                     color: Colors.black,
                   ),
                   itemBuilder: (context) => [
-                        PopupMenuItem(
+                        const PopupMenuItem(
                           child: Text(
                             "cancel gig",
                             style: TextStyle(fontSize: 18, color: Colors.red),
@@ -37,13 +37,13 @@ class OngoingItemView extends StatelessWidget {
                         ),
                       ]))
         ],
-        title: Text(
+        title:const Text(
           "details",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(20), topLeft: Radius.circular(20))),
@@ -90,19 +90,19 @@ class OngoingItemView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.end,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              new ClipRect(
-                                  child: new BackdropFilter(
-                                filter: new ImageFilter.blur(
+                              ClipRect(
+                                  child: BackdropFilter(
+                                filter: ImageFilter.blur(
                                     sigmaX: 10.0, sigmaY: 10.0),
-                                child: new Container(
+                                child: Container(
                                   width: 40.0,
                                   height: 20.0,
-                                  decoration: new BoxDecoration(
+                                  decoration:  BoxDecoration(
                                       borderRadius: BorderRadius.circular(5),
                                       color: Colors.grey.shade200
                                           .withOpacity(0.2)),
-                                  child: new Center(
-                                    child: new Text(
+                                  child: Center(
+                                    child: Text(
                                         '${gig.images!.indexOf(i) + 1}',
                                         style: Theme.of(context)
                                             .textTheme
