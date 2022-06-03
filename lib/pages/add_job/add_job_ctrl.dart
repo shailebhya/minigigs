@@ -171,7 +171,7 @@ class AddJobCtrl extends GetxController {
               SimpleDialogOption(
                 child: const Text(
                   'Camera',
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 16),
                 ),
                 onPressed: () => handleTakePhoto(),
               ),
@@ -184,7 +184,7 @@ class AddJobCtrl extends GetxController {
               SimpleDialogOption(
                 child: const Text(
                   'Gallery',
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 16),
                 ),
                 onPressed: () => handleChooseFromGallery(),
               ),
@@ -197,7 +197,7 @@ class AddJobCtrl extends GetxController {
               SimpleDialogOption(
                 child: Text(
                   'Cancel',
-                  style: TextStyle(color: Colors.red.shade500),
+                  style: TextStyle(color: Colors.red.shade500, fontSize: 16),
                 ),
                 onPressed: () => Get.back(),
               )

@@ -53,7 +53,7 @@ class LoginPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     InkWell(
-                        onTap: ()async =>await  authCtrl.googleLogin(),
+                        onTap: () async => await authCtrl.googleLogin(),
                         child: Container(
                           width: SizeConfig.screenWidth / 1.5,
                           height: SizeConfig.screenHeight / 17,

@@ -14,3 +14,4 @@ const String gigsListId = "gigsListId";
 const String jobDetailsId = "jobDetailsId";
 const String ongoingListId = "ongoingListId";
 const String historyListId = "historyListId";
+const String acceptGigTextId = "acceptGigTextId";

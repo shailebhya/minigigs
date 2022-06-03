@@ -20,7 +20,27 @@ class HomeCtrl extends GetxController {
   bool ongoingGigsLoading = false;
   int selectedCityIndex = 0;
   bool historyGigsLoading = false;
-  List<String> cities = ["Jamshedpur", "MIT Manipal", "VIT Vellore","Jamshedpur", "MIT Manipal", "VIT Vellore","Jamshedpur", "MIT Manipal", "VIT Vellore","Jamshedpur", "MIT Manipal", "VIT Vellore","Jamshedpur", "MIT Manipal", "VIT Vellore","Jamshedpur", "MIT Manipal", "VIT Vellore"];
+  bool acceptLoading = false;
+  List<String> cities = [
+    "Jamshedpur",
+    "MIT Manipal",
+    "VIT Vellore",
+    "Jamshedpur",
+    "MIT Manipal",
+    "VIT Vellore",
+    "Jamshedpur",
+    "MIT Manipal",
+    "VIT Vellore",
+    "Jamshedpur",
+    "MIT Manipal",
+    "VIT Vellore",
+    "Jamshedpur",
+    "MIT Manipal",
+    "VIT Vellore",
+    "Jamshedpur",
+    "MIT Manipal",
+    "VIT Vellore"
+  ];
   double rating = 0;
   Dio dio = Dio();
   RefreshController refreshController =
@@ -83,6 +103,8 @@ class HomeCtrl extends GetxController {
   }
 
   acceptGig(id) async {
+    acceptLoading = true;
+        update([jobDetailsId]);
     debugPrint("in accept Gig");
     String apiUrl = "$baseUrl/gigs/updateGig/accept/$id";
     debugPrint(apiUrl);
@@ -90,6 +112,8 @@ class HomeCtrl extends GetxController {
       var response =
           await dio.put(apiUrl, data: {"acceptedBy": authCtrl.user.toJson()});
       if (response.statusCode == 200 || response.statusCode == 201) {
+         acceptLoading = false;
+    // update([acceptGigTextId]);
         debugPrint('response status : 200');
         update([jobDetailsId]);
         debugPrint(response.data.toString());
@@ -108,6 +132,8 @@ class HomeCtrl extends GetxController {
             "this gig has been accepted by someone, please refresh and try again");
       }
     } catch (e) {
+       acceptLoading = false;
+        update([jobDetailsId]);
       debugPrint('error while accepting gig db: ${e.toString()}');
       Get.snackbar("sorry", "an error occurred ");
     }
@@ -118,7 +144,9 @@ class HomeCtrl extends GetxController {
     debugPrint("in get gigs from init");
     if (date == 1) {
       gigsLoading = true;
-      // update([gigsListId]);
+      if (!frominit) {
+        update([gigsListId]);
+      }
     }
     String apiUrl = "$baseUrl/gigs/getGigs/$city/$date/$id";
     debugPrint(apiUrl);

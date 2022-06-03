@@ -54,7 +54,7 @@ class _AddJobState extends State<AddJob> {
                             ),
                           ),
                         ),
-                        CircularProgressIndicator()
+                        CircularProgressIndicator(color: Colors.black)
                       ],
                     ),
                   )
@@ -542,7 +542,7 @@ class _AddJobState extends State<AddJob> {
                                   actions: <Widget>[
                                     TextButton(
                                         style: TextButton.styleFrom(
-                                          primary:const Color.fromARGB(
+                                          primary: const Color.fromARGB(
                                               255, 250, 168, 198),
                                         ),
                                         child: const Text(

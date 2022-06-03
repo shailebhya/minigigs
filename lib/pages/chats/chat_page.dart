@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:file_picker/file_picker.dart';
@@ -9,7 +8,6 @@ import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:uuid/uuid.dart';
-
 
 class ChatPage extends StatefulWidget {
   const ChatPage({Key? key}) : super(key: key);
@@ -112,7 +110,6 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _loadMessages() async {
-    
     final response = await rootBundle.loadString('assets/messages.json');
     final messages = (jsonDecode(response) as List)
         .map((e) => types.Message.fromJson(e as Map<String, dynamic>))
@@ -128,8 +125,8 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       body: Chat(
         messages: _messages,
-        onAttachmentPressed: (){
-                    _handleImageSelection();
+        onAttachmentPressed: () {
+          _handleImageSelection();
         },
         onMessageTap: _handleMessageTap,
         onPreviewDataFetched: _handlePreviewDataFetched,

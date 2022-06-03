@@ -17,10 +17,9 @@ void main() async {
   if (!kIsWeb) {
     final document = await getApplicationDocumentsDirectory();
     Hive.init(document.path);
-
   }
-      Hive.registerAdapter(UserModelAdapter());
-    await Hive.openBox<UserModel>(userBoxName);
+  Hive.registerAdapter(UserModelAdapter());
+  await Hive.openBox<UserModel>(userBoxName);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }

@@ -1,3 +1,4 @@
+import 'package:easily/models/user_model.dart';
 import 'package:easily/pages/auth/auth_ctrl.dart';
 import 'package:easily/pages/drawer/history/history.dart';
 import 'package:easily/pages/drawer/ongoing/ongoing.dart';
@@ -37,12 +38,12 @@ class _SideMenuState extends State<SideMenu> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: InkWell(
-                    onTap: ()async {
-                      _.user.id!=null
+                    onTap: () async {
+                      _.user.id != null
                           ? Get.to(() => Profile())
                           : await _.googleLogin();
                     },
-                    child: _.user.id!=null
+                    child: _.user.id != null
                         ? Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -122,7 +123,7 @@ class _SideMenuState extends State<SideMenu> {
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (_.user.id!=null) ...[
+                          if (_.user.id != null) ...[
                             InkWell(
                               onTap: () {
                                 Get.to(() => Ongoing());
@@ -130,8 +131,7 @@ class _SideMenuState extends State<SideMenu> {
                               child: Text(
                                 "ongoing ",
                                 style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600),
+                                    fontSize: 18, fontWeight: FontWeight.w600),
                               ),
                             ),
                             SizedBox(
@@ -172,22 +172,25 @@ class _SideMenuState extends State<SideMenu> {
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.w600),
                           ),
-                          if (_.user.id!=null) ...[  SizedBox(
-                            height: 20,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              _.googleLogout();
-                              
-                            },
-                            child: Text(
-                              "log out",
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600),
+                          if (_.user.id != null) ...[
+                            SizedBox(
+                              height: 20,
                             ),
-                          ),],
+                            InkWell(
+                              onTap: () {
+                                // _.user = UserModel();
+                                _.googleLogout();
+                                setState(() {});
+                              },
+                              child: Text(
+                                "log out",
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ],
                           SizedBox(
                             height: 20,
                           ),

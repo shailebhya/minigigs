@@ -190,12 +190,15 @@ class Profile extends StatelessWidget {
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 16)),
                                           onPressed: () {
-                                             Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (_) => VerifyPhoneNumberScreen(phoneNumber: '+919334741294'),
-    ),
-  );
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (_) =>
+                                                    VerifyPhoneNumberScreen(
+                                                        phoneNumber:
+                                                            '+919334741294'),
+                                              ),
+                                            );
                                           }),
                                     )
                                   : Text(
@@ -220,9 +223,8 @@ class Profile extends StatelessWidget {
                             ),
                             Expanded(
                               child: Text(
-                                DateFormat('dd MMM yyyy').format( DateTime.parse( _.user.joinedOn!))
-                             
-                             ,
+                                DateFormat('dd MMM yyyy')
+                                    .format(DateTime.parse(_.user.joinedOn!)),
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 16),
                               ),

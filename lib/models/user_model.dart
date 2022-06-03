@@ -71,7 +71,7 @@ class UserModel {
       reviews = arr0;
     }
     id = json['id']?.toString();
-        cityToSearch = json['cityToSearch']?.toString();
+    cityToSearch = json['cityToSearch']?.toString();
 
     username = json['username']?.toString();
     fullname = json['fullname']?.toString();

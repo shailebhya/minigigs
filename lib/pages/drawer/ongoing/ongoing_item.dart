@@ -67,7 +67,9 @@ class OngoingItem extends StatelessWidget {
             children: [
               Text("created by: "),
               Text(
-                gig.createdBy!.id == homeCtrl.authCtrl.user.id?'you':gig.createdBy!.username??"",
+                gig.createdBy!.id == homeCtrl.authCtrl.user.id
+                    ? 'you'
+                    : gig.createdBy!.username ?? "",
                 style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
               ),
             ],

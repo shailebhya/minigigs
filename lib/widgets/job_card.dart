@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-
 class JobCard extends StatelessWidget {
   bool hasImage;
   GigModel gigModel;
@@ -59,12 +58,22 @@ class JobCard extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(DateTime.parse(gigModel.deadline!).day==DateTime.now().day?"due at":"due on",
+                  Text(
+                      DateTime.parse(gigModel.deadline!).day ==
+                              DateTime.now().day
+                          ? "due at"
+                          : "due on",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
                           color: Colors.red[400])),
-                  Text(DateTime.parse(gigModel.deadline!).day==DateTime.now().day?DateFormat('HH:mm').format(DateTime.parse(gigModel.deadline!)): DateFormat('dd, MMM').format(DateTime.parse(gigModel.deadline!)),
+                  Text(
+                      DateTime.parse(gigModel.deadline!).day ==
+                              DateTime.now().day
+                          ? DateFormat('HH:mm')
+                              .format(DateTime.parse(gigModel.deadline!))
+                          : DateFormat('dd, MMM')
+                              .format(DateTime.parse(gigModel.deadline!)),
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
@@ -85,24 +94,26 @@ class JobCard extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: Text(
-                      gigModel.type??"",
+                      gigModel.type ?? "",
                       style: TextStyle(color: Colors.amber[500]),
                     ),
                   )),
-             if(gigModel.isRemote??false)...[ SizedBox(
-                width: 10,
-              ),
-              Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: Colors.green[50]),
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Text(
-                      "remote",
-                      style: TextStyle(color: Colors.green[500]),
-                    ),
-                  ))]
+              if (gigModel.isRemote ?? false) ...[
+                SizedBox(
+                  width: 10,
+                ),
+                Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.green[50]),
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Text(
+                        "remote",
+                        style: TextStyle(color: Colors.green[500]),
+                      ),
+                    ))
+              ]
             ],
           ),
           SizedBox(
@@ -115,7 +126,8 @@ class JobCard extends StatelessWidget {
                 flex: 3,
                 child: Text(
                   "you earn: \u{20B9}${gigModel.baseAmount}",
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
               Flexible(
@@ -129,13 +141,14 @@ class JobCard extends StatelessWidget {
                         Flexible(
                           flex: 5,
                           child: Text(
-                           gigModel.createdBy!.username!.substring(0,11)+'...',
+                            gigModel.createdBy!.username!.substring(0, 11) +
+                                '...',
                             // overflow: TextOverflow.fade,
                             style: TextStyle(
                                 fontWeight: FontWeight.w600, fontSize: 12),
                           ),
                         ),
-                        gigModel.createdBy!.phoneNumber!=null
+                        gigModel.createdBy!.phoneNumber != null
                             ? SizedBox()
                             : Flexible(
                                 flex: 1,
@@ -144,7 +157,10 @@ class JobCard extends StatelessWidget {
                                     child: Icon(
                                       Icons.verified,
                                       size: 13,
-                                      color:  gigModel.createdBy!.phoneNumber==null ? Colors.grey : Colors.green,
+                                      color: gigModel.createdBy!.phoneNumber ==
+                                              null
+                                          ? Colors.grey
+                                          : Colors.green,
                                     ))),
                       ],
                     ),
@@ -152,8 +168,11 @@ class JobCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(
-                 gigModel.createdBy!.rating==0?   '.':    ' ${(gigModel.createdBy!.rating!/gigModel.createdBy!.numberOfRatings!).toStringAsFixed(2)}',
-                          style: TextStyle(fontSize :12,fontWeight: FontWeight.bold),
+                          gigModel.createdBy!.rating == 0
+                              ? '.'
+                              : ' ${(gigModel.createdBy!.rating! / gigModel.createdBy!.numberOfRatings!).toStringAsFixed(2)}',
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold),
                         ),
                         Icon(
                           Icons.star,

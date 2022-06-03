@@ -8,6 +8,7 @@ import 'package:easily/models/gig_model.dart';
 import 'package:easily/pages/auth/auth_ctrl.dart';
 import 'package:easily/pages/chats/chat_page.dart';
 import 'package:easily/pages/homepage/home_ctrl.dart';
+import 'package:easily/pages/homepage/photo_viewer.dart';
 import 'package:easily/services/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -35,8 +36,8 @@ class _JobDetailsState extends State<JobDetails> {
               centerTitle: true,
               shadowColor: Colors.transparent,
               backgroundColor: Colors.grey[50],
-              title: Text(
-                "Details",
+              title:const Text(
+                "details",
                 style:
                     TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               ),
@@ -44,7 +45,7 @@ class _JobDetailsState extends State<JobDetails> {
             body: Stack(
               children: [
                 Container(
-                  decoration: BoxDecoration(
+                  decoration:const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
                           topRight: Radius.circular(20),
@@ -53,87 +54,109 @@ class _JobDetailsState extends State<JobDetails> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 15.0, vertical: 20),
                     child: ListView(children: [
-                      if (widget.gigModel.images!.isNotEmpty)...[CarouselSlider(
-                        options: CarouselOptions(
-                          height: 200,
-                          aspectRatio: 16 / 9,
-                          viewportFraction: 0.8,
-                          initialPage: 0,
-                          enableInfiniteScroll: false,
-                          reverse: false,
-                          autoPlay: false,
-                          autoPlayInterval: Duration(seconds: 3),
-                          autoPlayAnimationDuration:
-                              Duration(milliseconds: 800),
-                          autoPlayCurve: Curves.fastOutSlowIn,
-                          enlargeCenterPage: true,
-                          // onPageChanged: callbackFunction,
-                          scrollDirection: Axis.horizontal,
-                        ),
-                        items: widget.gigModel.images!.map((i) {
-                          return Builder(
-                            builder: (BuildContext context) {
-                              return Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  margin: EdgeInsets.symmetric(horizontal: 5.0),
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.fitHeight,
-                                          image: NetworkImage(i ?? "")),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color: Color.fromARGB(
-                                                255, 248, 246, 246),
-                                            blurRadius: 4,
-                                            offset: Offset(0, 3),
-                                            spreadRadius: 5),
-                                      ],
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(15)),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      new ClipRect(
-                                          child: new BackdropFilter(
-                                        filter: new ImageFilter.blur(
-                                            sigmaX: 10.0, sigmaY: 10.0),
-                                        child: new Container(
-                                          width: 40.0,
-                                          height: 20.0,
-                                          decoration: new BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              color: Colors.grey.shade200
-                                                  .withOpacity(0.2)),
-                                          child: new Center(
-                                            child: new Text(
-                                                '${widget.gigModel.images!.indexOf(i)+1}',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium),
-                                          ),
-                                        ),
+                      if (widget.gigModel.images!.isNotEmpty) ...[
+                        CarouselSlider(
+                          options: CarouselOptions(
+                            height: 200,
+                            aspectRatio: 16 / 9,
+                            viewportFraction: 0.8,
+                            initialPage: 0,
+                            enableInfiniteScroll: false,
+                            reverse: false,
+                            autoPlay: false,
+                            autoPlayInterval: const Duration(seconds: 3),
+                            autoPlayAnimationDuration:
+                                const Duration(milliseconds: 800),
+                            autoPlayCurve: Curves.fastOutSlowIn,
+                            enlargeCenterPage: true,
+                            // onPageChanged: callbackFunction,
+                            scrollDirection: Axis.horizontal,
+                          ),
+                          items: widget.gigModel.images!.map((i) {
+                            return Builder(
+                              builder: (BuildContext context) {
+                                return InkWell(
+                                  onTap: (){
+                                        Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GalleryPhotoViewWrapper(
+          galleryItems: widget.gigModel.images!,
+          backgroundDecoration: const BoxDecoration(
+            color: Colors.black,
+          ),
+          initialIndex: widget.gigModel.images!.indexOf(i),
+          scrollDirection: Axis.horizontal,
+        ),
+      ),
+    );
+  
+                                  },
+                                  child: Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      margin:
+                                         const EdgeInsets.symmetric(horizontal: 5.0),
+                                      decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                              fit: BoxFit.fitHeight,
+                                              image: NetworkImage(i ?? "")),
+                                          boxShadow: const[
+                                            BoxShadow(
+                                                color: Color.fromARGB(
+                                                    255, 248, 246, 246),
+                                                blurRadius: 4,
+                                                offset: Offset(0, 3),
+                                                spreadRadius: 5),
+                                          ],
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(15)),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                           ClipRect(
+                                              child:  BackdropFilter(
+                                            filter:  ImageFilter.blur(
+                                                sigmaX: 10.0, sigmaY: 10.0),
+                                            child:  Container(
+                                              width: 40.0,
+                                              height: 20.0,
+                                              decoration:  BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  color: Colors.grey.shade200
+                                                      .withOpacity(0.2)),
+                                              child:  Center(
+                                                child:  Text(
+                                                    '${widget.gigModel.images!.indexOf(i) + 1}',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium),
+                                              ),
+                                            ),
+                                          )),
+                                          const SizedBox(
+                                            height: 5,
+                                          )
+                                        ],
                                       )),
-                                      SizedBox(
-                                        height: 5,
-                                      )
-                                    ],
-                                  ));
-                            },
-                          );
-                        }).toList(),
-                      )],
-                      SizedBox(
+                                );
+                              },
+                            );
+                          }).toList(),
+                        )
+                      ],
+                      const SizedBox(
                         height: 20,
                       ),
                       Text(
                         widget.gigModel.title ?? "",
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 17),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Row(
@@ -143,14 +166,14 @@ class _JobDetailsState extends State<JobDetails> {
                               radius: 20,
                               backgroundImage: NetworkImage(
                                   widget.gigModel.createdBy!.img ?? "")),
-                          SizedBox(width: 5),
+                          const SizedBox(width: 5),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 widget.gigModel.createdBy!.username ??
                                     "loading...",
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontWeight: FontWeight.w600, fontSize: 15),
                               ),
                               Row(
@@ -159,14 +182,14 @@ class _JobDetailsState extends State<JobDetails> {
                                     widget.gigModel.createdBy!.rating == 0
                                         ? '.'
                                         : ' ${(widget.gigModel.createdBy!.rating! / widget.gigModel.createdBy!.numberOfRatings!).toStringAsFixed(2)}',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  Icon(
+                                  const Icon(
                                     Icons.star,
                                     size: 20,
-                                    color: Color.fromARGB(255, 246, 222, 2),
+                                    color: const Color.fromARGB(255, 246, 222, 2),
                                   )
                                 ],
                               ),
@@ -174,152 +197,165 @@ class _JobDetailsState extends State<JobDetails> {
                           ),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 15,
                       ),
                       Row(
                         children: [
-                          Text("you get: "),
+                          const Text("you get: "),
                           Text(
                             '\u{20B9}' + widget.gigModel.baseAmount.toString(),
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 15),
                           ),
                         ],
                       ),
-                      SizedBox(
+                     const SizedBox(
                         height: 15,
                       ),
                       Row(
                         children: [
-                          Text("city: "),
+                         const Text("city: "),
                           Text(
                             widget.gigModel.city ?? "",
-                            style: TextStyle(
+                            style:const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 15),
                           ),
                         ],
                       ),
-                      SizedBox(
+                    const  SizedBox(
                         height: 10,
                       ),
                       Row(
                         children: [
-                          Text("due at: "),
+                          const Text("due at: "),
                           Text(
                             DateFormat('dd, MMM HH:mm').format(
                                 DateTime.parse(widget.gigModel.deadline!)),
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 15),
                           ),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Row(
                         children: [
-                          Text("location: "),
+                          const Text("location: "),
                           Expanded(
                               child: Text(widget.gigModel.location ?? "remote",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15))),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Row(
                         children: [
-                          Text("type: "),
+                          const Text("type: "),
                           Text(
                             widget.gigModel.type ?? "misscl.",
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 15),
                           ),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Container(
                         decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 227, 224, 227),
-                            borderRadius: BorderRadius.circular(20)),
+                            color: const Color.fromARGB(255, 227, 224, 227),
+                            borderRadius: BorderRadius.circular(10)),
                         child: Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("more info :",
+                              const  Text("more info :",
                                     style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: 16,
                                         fontWeight: FontWeight.w600)),
-                                SizedBox(
+                             const   SizedBox(
                                   height: 10,
                                 ),
                                 Text(
                                   widget.gigModel.description ?? "",
-                                  style: TextStyle(fontSize: 18),
+                                  style:const TextStyle(fontSize: 16),
                                 ),
                               ],
                             )),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       widget.gigModel.acceptedBy!.id == null
-                          ? SizedBox()
+                          ? const SizedBox()
                           : Container(
                               decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 227, 224, 227),
-                                  borderRadius: BorderRadius.circular(20)),
+                                  color: const Color.fromARGB(255, 227, 224, 227),
+                                  borderRadius: BorderRadius.circular(10)),
                               child: Padding(
                                   padding: const EdgeInsets.all(12.0),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                     const Text("imp data :",
+                                      const Text("imp data :",
                                           style: TextStyle(
-                                              fontSize: 18,
+                                              fontSize: 16,
                                               color: Colors.red,
                                               fontWeight: FontWeight.w600)),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       Text(
-                                      widget.gigModel.impData??"",
-                                        style: TextStyle(fontSize: 18),
+                                        widget.gigModel.impData ?? "",
+                                        style: const TextStyle(fontSize: 16),
                                       ),
                                     ],
                                   )),
                             ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
-                      if( _.authCtrl.user.id != null &&   widget.gigModel.acceptedBy!.id ==
-                                        _.authCtrl.user.id)...[ InkWell(
-                                          onTap:()=> Get.to(()=>const ChatPage()),
-                                          child: Container(
-                                                                    width: 150,
-                                                                    decoration: BoxDecoration(
-                                                                        color: Color.fromARGB(255, 108, 33, 229),
-                                                                        borderRadius: BorderRadius.circular(20)),
-                                                                    child: Padding(
-                                                                      padding: EdgeInsets.all(10.0),
-                                                                      child: Row(
-                                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                                        children:const [
-                                                                         Icon(Icons.chat_bubble_outline,color: Colors.white,),SizedBox(width: 10,), Text(   'chat',
-                                                                            style: TextStyle(
-                                                                            color: Colors.white, fontSize: 21),
-                                                                          )
-                                                                        ],
-                                                                      ),
-                                                                    )),
-                                        )],    const  SizedBox(
+                      if (_.authCtrl.user.id != null &&
+                          widget.gigModel.acceptedBy!.id ==
+                              _.authCtrl.user.id) ...[
+                        InkWell(
+                          onTap: () => Get.to(() => const ChatPage()),
+                          child: Container(
+                              width: 150,
+                              decoration: BoxDecoration(
+                                  color: const Color.fromARGB(255, 108, 33, 229),
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    Icon(
+                                      Icons.chat_bubble_outline,
+                                      color: Colors.white,
+                                      size: 18,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      'chat',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 16),
+                                    )
+                                  ],
+                                ),
+                              )),
+                        )
+                      ],
+                      const SizedBox(
                         height: 10,
                       ),
                       InkWell(
@@ -330,7 +366,7 @@ class _JobDetailsState extends State<JobDetails> {
                             if (widget.gigModel.acceptedBy!.id ==
                                 _.authCtrl.user.id) {
                               _.controllerBottomCenter.play();
-                              Get.snackbar("success",
+                              Get.snackbar("already accepted",
                                   "you have already accepted this gig, lessgooo🥳");
                             } else {
                               await _.acceptGig(widget.gigModel.id);
@@ -342,23 +378,24 @@ class _JobDetailsState extends State<JobDetails> {
                                 "please login from the side menu");
                           }
                         },
-                        child: Container(
-                            width: 150,
-                            decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 0, 0, 0),
-                                borderRadius: BorderRadius.circular(20)),
-                            child: Padding(
-                              padding: EdgeInsets.all(10.0),
-                              child: Center(
-                                  child: Text(
-                             _.authCtrl.user.id != null &&   widget.gigModel.acceptedBy!.id ==
-                                        _.authCtrl.user.id
-                                    ? 'accepted🔒'
-                                    : "accept gig",
-                                style:const TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              )),
-                            )),
+                        child:Container(
+                                width: 150,
+                                decoration: BoxDecoration(
+                                    color: const Color.fromARGB(255, 0, 0, 0),
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Center(
+                                      child:_.acceptLoading?const CircularProgressIndicator(strokeWidth: 2,color: Colors.white,): Text(
+                                    _.authCtrl.user.id != null &&
+                                            widget.gigModel.acceptedBy!.id ==
+                                                _.authCtrl.user.id
+                                        ? 'accepted🔒'
+                                        : "accept gig",
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 16),
+                                  )),
+                                ))
                       ),
                     ]),
                   ),
@@ -368,9 +405,9 @@ class _JobDetailsState extends State<JobDetails> {
                   child: ConfettiWidget(
                     confettiController: _.controllerBottomCenter,
                     blastDirection: -pi / 2,
-                    emissionFrequency: 0.01,
+                    emissionFrequency: 0.008,
                     numberOfParticles: 30,
-                    maxBlastForce: 120,
+                    maxBlastForce: 80,
                     minBlastForce: 70,
                     gravity: 0.01,
                   ),

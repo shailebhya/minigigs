@@ -23,7 +23,7 @@ class OngoingItemView extends StatelessWidget {
           Padding(
               padding: const EdgeInsets.only(right: 10.0),
               child: PopupMenuButton(
-                  icon:const  Icon(
+                  icon: const Icon(
                     Icons.more_vert_rounded,
                     color: Colors.black,
                   ),
@@ -37,7 +37,7 @@ class OngoingItemView extends StatelessWidget {
                         ),
                       ]))
         ],
-        title:const Text(
+        title: const Text(
           "details",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
@@ -97,13 +97,12 @@ class OngoingItemView extends StatelessWidget {
                                 child: Container(
                                   width: 40.0,
                                   height: 20.0,
-                                  decoration:  BoxDecoration(
+                                  decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(5),
                                       color: Colors.grey.shade200
                                           .withOpacity(0.2)),
                                   child: Center(
-                                    child: Text(
-                                        '${gig.images!.indexOf(i) + 1}',
+                                    child: Text('${gig.images!.indexOf(i) + 1}',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium),
@@ -237,7 +236,7 @@ class OngoingItemView extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                   color: Color.fromARGB(255, 227, 224, 227),
-                  borderRadius: BorderRadius.circular(20)),
+                  borderRadius: BorderRadius.circular(10)),
               child: Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
@@ -276,7 +275,7 @@ class OngoingItemView extends StatelessWidget {
                 : Container(
                     decoration: BoxDecoration(
                         color: Color.fromARGB(255, 227, 224, 227),
-                        borderRadius: BorderRadius.circular(20)),
+                        borderRadius: BorderRadius.circular(10)),
                     child: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Column(

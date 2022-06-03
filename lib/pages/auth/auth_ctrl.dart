@@ -23,7 +23,6 @@ class AuthCtrl extends GetxController {
       UserModel(superuser: false, rating: 0, numberOfRatings: 0, reviews: []);
   final GoogleSignIn googleSignIn = GoogleSignIn();
   bool? isAuth;
-  // final dlCtrl = Get.put<DynamicLinkCtrl>(DynamicLinkCtrl());
   Dio dio = Dio();
   Box<UserModel?>? userBox;
   bool isLoading = true;
@@ -35,8 +34,7 @@ class AuthCtrl extends GetxController {
     user =
         UserModel(superuser: false, rating: 0, numberOfRatings: 0, reviews: []);
     userBox!.delete(0);
-    // debugPrint(userBox.toString());
-    await googleSignIn.disconnect();
+    await googleSignIn.signOut();
   }
 
   googleLogin() async {
@@ -63,10 +61,10 @@ class AuthCtrl extends GetxController {
       if (response.statusCode == 200 || response.statusCode == 201) {
         debugPrint('response status : 200');
         user = UserModel.fromJson(response.data);
-        if (kIsWeb) {
-          isLoading = false;
-          update([homePageId]);
-        }
+        // if (kIsWeb) {
+        isLoading = false;
+        update([homePageId]);
+        // }
         await userBox!.containsKey(0)
             ? userBox!.putAt(0, user)
             : userBox!.add(user);
@@ -78,7 +76,7 @@ class AuthCtrl extends GetxController {
     }
   }
 
-  updateUserDb(data,UserModel user) async {
+  updateUserDb(data, UserModel user) async {
     debugPrint("in updt User Db");
     String apiUrl = "$baseUrl/users/updateUser/${user.id}";
     try {
@@ -129,10 +127,10 @@ class AuthCtrl extends GetxController {
     } else {
       //deserialize user
       user = UserModel.fromJson(userJson!);
-      if (kIsWeb) {
-        isLoading = false;
-        update([homePageId]);
-      }
+      // if (kIsWeb) {
+      isLoading = false;
+      update([homePageId]);
+      // }
       // if (!kIsWeb) {
       await storeUserDataInHive(context);
       // } else {
@@ -143,9 +141,7 @@ class AuthCtrl extends GetxController {
 
   storeUserDataInHive(context) async {
     debugPrint("In store User Data In Hive" + user.toString());
-     userBox!.containsKey(0)
-        ? userBox!.putAt(0, user)
-        : userBox!.add(user);
+    userBox!.containsKey(0) ? userBox!.putAt(0, user) : userBox!.add(user);
 
     // logger.d("user data stored in hive. Now nav to Home Page");
     Get.to(() => HomePage());
@@ -159,25 +155,17 @@ class AuthCtrl extends GetxController {
       await checkUserInDb(context);
 
       isAuth = true;
+      isLoading = false;
       update([authPageId]);
       update([sideMenuId]);
-
-      if (kIsWeb) {
-        isLoading = false;
-        update([homePageId]);
-        
-      }
-    } else {
-      // if (kIsWeb) {
-      isLoading = false;
       update([homePageId]);
-
-      // }
+    } else {
       debugPrint("account logged out");
       isAuth = false;
+      isLoading = false;
+      update([homePageId]);
       update([authPageId]);
-                  update([sideMenuId]);
-
+      update([sideMenuId]);
     }
   }
 
@@ -187,10 +175,9 @@ class AuthCtrl extends GetxController {
       debugPrint("hello inside the on current use chagen listennn");
       handleSignIn(account!, context);
     }, onError: (err) {
-      if (kIsWeb) {
-        isLoading = false;
-        update([homePageId]);
-      }
+      // if (kIsWeb) {
+
+      // }
       debugPrint("Error signing in : $err");
     }); //Reauthenticate when app is opened!!
     await googleSignIn
@@ -201,12 +188,10 @@ class AuthCtrl extends GetxController {
       handleSignIn(account, context);
     }).catchError((err) {
       debugPrint("in listen account ERROR : $err");
-      if (kIsWeb) {
-        isLoading = false;
-        update([homePageId]);
-      }
       isAuth = false;
+      isLoading = false;
       update([authPageId]);
+      update([homePageId]);
     });
   }
 

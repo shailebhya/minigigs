@@ -74,7 +74,7 @@ class _VerifyPhoneNumberScreenState extends State<VerifyPhoneNumberScreen>
                 : 'OTP was verified manually!',
           );
 
-          Get.snackbar('Phone number verified successfully!','');
+          Get.snackbar('Phone number verified successfully!', '');
 
           log(
             VerifyPhoneNumberScreen.id,
@@ -88,7 +88,7 @@ class _VerifyPhoneNumberScreenState extends State<VerifyPhoneNumberScreen>
           // );
         },
         onLoginFailed: (authException) {
-          Get.snackbar('Something went wrong!','');
+          Get.snackbar('Something went wrong!', '');
           log(VerifyPhoneNumberScreen.id, error: authException.message);
           // handle error further if needed
         },
@@ -167,7 +167,7 @@ class _VerifyPhoneNumberScreenState extends State<VerifyPhoneNumberScreen>
                           );
                           // Incorrect OTP
                           if (!isValidOTP) {
-                            Get.snackbar('The entered OTP is invalid!','');
+                            Get.snackbar('The entered OTP is invalid!', '');
                           }
                         },
                       ),
