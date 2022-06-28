@@ -1,12 +1,17 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easily/models/gig_model.dart';
 import 'package:easily/pages/homepage/home_ctrl.dart';
+import 'package:easily/pages/homepage/photo_viewer.dart';
+import 'package:easily/widgets/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
+import '../../chats/chat_page.dart';
 
 class OngoingItemView extends StatelessWidget {
   GigModel gig;
@@ -70,50 +75,68 @@ class OngoingItemView extends StatelessWidget {
                 items: gig.images!.map((i) {
                   return Builder(
                     builder: (BuildContext context) {
-                      return Container(
-                          width: MediaQuery.of(context).size.width,
-                          margin: EdgeInsets.symmetric(horizontal: 5.0),
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  fit: BoxFit.fitHeight,
-                                  image: NetworkImage(i ?? "")),
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Color.fromARGB(255, 248, 246, 246),
-                                    blurRadius: 4,
-                                    offset: Offset(0, 3),
-                                    spreadRadius: 5),
-                              ],
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(15)),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              ClipRect(
-                                  child: BackdropFilter(
-                                filter: ImageFilter.blur(
-                                    sigmaX: 10.0, sigmaY: 10.0),
-                                child: Container(
-                                  width: 40.0,
-                                  height: 20.0,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      color: Colors.grey.shade200
-                                          .withOpacity(0.2)),
-                                  child: Center(
-                                    child: Text('${gig.images!.indexOf(i) + 1}',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium),
-                                  ),
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GalleryPhotoViewWrapper(
+                                galleryItems: gig.images!,
+                                backgroundDecoration: const BoxDecoration(
+                                  color: Colors.black,
                                 ),
-                              )),
-                              SizedBox(
-                                height: 5,
-                              )
-                            ],
-                          ));
+                                initialIndex: gig.images!.indexOf(i),
+                                scrollDirection: Axis.horizontal,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            margin: EdgeInsets.symmetric(horizontal: 5.0),
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    fit: BoxFit.fitHeight,
+                                    image: NetworkImage(i ?? "")),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Color.fromARGB(255, 248, 246, 246),
+                                      blurRadius: 4,
+                                      offset: Offset(0, 3),
+                                      spreadRadius: 5),
+                                ],
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15)),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                ClipRect(
+                                    child: BackdropFilter(
+                                  filter: ImageFilter.blur(
+                                      sigmaX: 10.0, sigmaY: 10.0),
+                                  child: Container(
+                                    width: 40.0,
+                                    height: 20.0,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: Colors.grey.shade200
+                                            .withOpacity(0.2)),
+                                    child: Center(
+                                      child: Text(
+                                          '${gig.images!.indexOf(i) + 1}',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium),
+                                    ),
+                                  ),
+                                )),
+                                SizedBox(
+                                  height: 5,
+                                )
+                              ],
+                            )),
+                      );
                     },
                   );
                 }).toList(),
@@ -176,28 +199,30 @@ class OngoingItemView extends StatelessWidget {
                 Text(
                   DateFormat('dd, MMM HH:mm')
                       .format(DateTime.parse(gig.createdAt!)),
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 15),
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Row(
               children: [
-                Text("due at: "),
+                const Text("due at: "),
                 Text(
                   DateFormat('dd, MMM HH:mm')
                       .format(DateTime.parse(gig.deadline!)),
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 15),
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Row(
-              children: [
+              children: const [
                 Text("location: "),
                 Expanded(
                     child: Text("Manipal Institute Of Technology",
@@ -205,19 +230,19 @@ class OngoingItemView extends StatelessWidget {
                             fontWeight: FontWeight.bold, fontSize: 15))),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Row(
               children: [
-                Text("type: "),
+                const Text("type: "),
                 Text(
                   gig.type ?? "",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
 
@@ -235,27 +260,27 @@ class OngoingItemView extends StatelessWidget {
 
             Container(
               decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 227, 224, 227),
+                  color: const Color.fromARGB(255, 227, 224, 227),
                   borderRadius: BorderRadius.circular(10)),
               child: Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("more info :",
+                      const Text("more info :",
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.w600)),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Text(
                         gig.description ?? "",
-                        style: TextStyle(fontSize: 18),
+                        style: const TextStyle(fontSize: 18),
                       ),
                     ],
                   )),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
 
@@ -299,8 +324,47 @@ class OngoingItemView extends StatelessWidget {
             SizedBox(
               height: 20,
             ),
-
-            if (gig.createdBy!.id == homeCtrl.authCtrl.user.id) ...[
+            InkWell(
+              onTap: () async {
+                if (gig.createdBy != null) {
+                  final channel =
+                      homeCtrl.authCtrl.client.channel('messaging', id: gig.id);
+                  await channel.watch();
+                  Get.to(() => ChatPage(gig,
+                      client: homeCtrl.authCtrl.client, channel: channel));
+                }
+              },
+              child: Container(
+                  width: 150,
+                  decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 108, 33, 229),
+                      borderRadius: BorderRadius.circular(20)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(
+                          Icons.chat_bubble_outline,
+                          color: Colors.white,
+                          size: 18,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          'chat',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        )
+                      ],
+                    ),
+                  )),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            if (gig.acceptedBy!.id == homeCtrl.authCtrl.user.id ||
+                gig.createdBy!.id == homeCtrl.authCtrl.user.id) ...[
               InkWell(
                 onTap: () {
                   showDialog(
@@ -313,8 +377,8 @@ class OngoingItemView extends StatelessWidget {
                             content: Column(
                               children: [
                                 Text(
-                                    "appreciate ${gig.createdBy!.username}'s work by rating"),
-                                SizedBox(
+                                    "appreciate ${gig.createdBy!.username} by rating them...",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 RatingBar.builder(
@@ -323,9 +387,9 @@ class OngoingItemView extends StatelessWidget {
                                   direction: Axis.horizontal,
                                   allowHalfRating: true,
                                   itemCount: 5,
-                                  itemPadding:
-                                      EdgeInsets.symmetric(horizontal: 4.0),
-                                  itemBuilder: (context, _) => Icon(
+                                  itemPadding: const EdgeInsets.symmetric(
+                                      horizontal: 4.0),
+                                  itemBuilder: (context, _) => const Icon(
                                     Icons.star,
                                     color: Colors.amber,
                                   ),
@@ -333,17 +397,54 @@ class OngoingItemView extends StatelessWidget {
                                     homeCtrl.rating = rating;
                                   },
                                 ),
-                                SizedBox(
-                                  height: 10,
+                                const SizedBox(
+                                  height: 15,
                                 ),
+                                // Text('how was the experience?'),
+                                 TextFormField(
+                                  // showCursor: true,
+                          controller: TextEditingController(),
+                          maxLength: 300,
+                          minLines: 1,
+                          maxLines: 7,
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w400),
+                          autovalidateMode: AutovalidateMode.always,
+                          decoration: const InputDecoration(
+                              // enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black,width: 2),borderRadius: BorderRadius.all(Radius.circular(10))),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.black, width: 1),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                              hintText:
+                                  "your feedback(optional)",
+                              hintStyle: TextStyle(fontSize: 13),
+                              fillColor: Colors.red,
+                              hintMaxLines: 2,
+                              labelText: 'feedback',
+                              labelStyle: TextStyle(color: Colors.black)),
+                          onSaved: (String? value) {
+                            // This optional block of code can be used to run
+                            // code when the user saves the form.
+                          },
+                          validator: (String? value) {
+                            return value!.contains('@')
+                                ? 'Do not use the @ char.'
+                                : null;
+                          },
+                        ),
                                 InkWell(
                                   onTap: () {
-                                    homeCtrl.authCtrl
-                                        .updateUserDb({}, gig.createdBy!);
+                                    //** hello
+                                    //*! close the messagin channel of this group
+                                    // homeCtrl.authCtrl
+                                    //     .updateUserDb({}, gig.createdBy!);
                                   },
                                   child: Container(
+                                    width: SizeConfig.screenWidth/5,
                                       decoration: BoxDecoration(
-                                          boxShadow: [
+                                          boxShadow: const [
                                             BoxShadow(
                                                 color: Color.fromARGB(
                                                     255, 248, 246, 246),
@@ -355,15 +456,23 @@ class OngoingItemView extends StatelessWidget {
                                               Border.all(color: Colors.grey),
                                           color: Colors.black,
                                           borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          'submit',
-                                          style: TextStyle(color: Colors.white),
+                                              BorderRadius.circular(5)),
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Center(
+                                          child: Text(
+                                            'submit',
+                                            style: TextStyle(color: Colors.white),
+                                          ),
                                         ),
                                       )),
-                                )
+                                ),
+                               const SizedBox(height: 10,),
+                                Row(mainAxisAlignment: MainAxisAlignment.center,children:const [
+                                  Icon(Icons.check_circle,color: Colors.green,),
+                                  SizedBox(width: 3,),
+                                  Text("thanks for the feedback!")
+                                ],)
                               ],
                             ),
                           ),
@@ -373,7 +482,7 @@ class OngoingItemView extends StatelessWidget {
                 child: Container(
                     width: 150,
                     decoration: BoxDecoration(
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                               color: Color.fromARGB(255, 248, 246, 246),
                               blurRadius: 4,

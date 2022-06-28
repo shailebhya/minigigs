@@ -23,20 +23,8 @@ class AddJobCtrl extends GetxController {
   FirebaseStorage storage = FirebaseStorage.instance;
   List<XFile> imageList = [];
   XFile? file;
-  List<String> cities = [
-    "Jamshedpur",
-    "Pune (Disabled)",
-    "tiruvananthapuram",
-    'manipal',
-    "Jamshedpur",
-    "Pune (Disabled)",
-    "tiruvananthapuram",
-    'manipal',
-    "Jamshedpur",
-    "Pune (Disabled)",
-    "tiruvananthapuram",
-    'manipal'
-  ];
+  final homePageCtrl = Get.find<HomeCtrl>();
+
   List<String> typeWork = [
     "delivery",
     "misscl.",
@@ -82,6 +70,7 @@ class AddJobCtrl extends GetxController {
         debugPrint('response status : 200');
         Get.back();
         Get.snackbar("success!!", 'your gig was successfully posted!,');
+        homeCtrl.getGigs(homeCtrl.cities[selectedCityIndex]);
         // return response;
       } else {
         Get.back();
@@ -120,7 +109,7 @@ class AddJobCtrl extends GetxController {
     gigModel.createdAt = DateTime.now().toString();
     gigModel.deadline = dateTime.toString();
     gigModel.acceptedBy = UserModel();
-    gigModel.city = cities[selectedCityIndex];
+    gigModel.city = homeCtrl.cities[selectedCityIndex];
     gigModel.type = typeWork[selectedTypeOfIndex];
   }
 

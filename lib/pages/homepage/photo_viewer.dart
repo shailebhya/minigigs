@@ -79,13 +79,11 @@ class _GalleryPhotoViewWrapperState extends State<GalleryPhotoViewWrapper> {
   PhotoViewGalleryPageOptions _buildItem(BuildContext context, int index) {
     final item = widget.galleryItems[index];
     return PhotoViewGalleryPageOptions(
-            imageProvider: NetworkImage(item),
-            initialScale: PhotoViewComputedScale.contained,
-            minScale: PhotoViewComputedScale.contained * (0.5 + index / 10),
-            maxScale: PhotoViewComputedScale.covered * 4.1,
-            // heroAttributes: PhotoViewHeroAttributes(tag: item.id),
-          );
+      imageProvider: NetworkImage(item),
+      initialScale: PhotoViewComputedScale.contained,
+      minScale: PhotoViewComputedScale.contained * (0.5 + index / 10),
+      maxScale: PhotoViewComputedScale.covered * 4.1,
+      // heroAttributes: PhotoViewHeroAttributes(tag: item.id),
+    );
   }
 }
-
-

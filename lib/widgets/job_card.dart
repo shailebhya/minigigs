@@ -1,7 +1,9 @@
 import 'package:easily/models/gig_model.dart';
+import 'package:easily/pages/profile2/profile2.dart';
 import 'package:easily/widgets/responsive.dart';
 import 'package:easily/widgets/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -16,7 +18,7 @@ class JobCard extends StatelessWidget {
       width: Responsive.isDesktop(context)
           ? getProportionateScreenWidth(100)
           : getProportionateScreenWidth(200),
-      decoration: BoxDecoration(boxShadow: [
+      decoration: BoxDecoration(boxShadow:const [
         BoxShadow(
             color: Color.fromARGB(255, 248, 246, 246),
             blurRadius: 4,
@@ -33,7 +35,7 @@ class JobCard extends StatelessWidget {
                   image: DecorationImage(
                       fit: BoxFit.contain,
                       image: NetworkImage(gigModel.images![0]!)),
-                  boxShadow: [
+                  boxShadow: const[
                     BoxShadow(
                         color: Color.fromARGB(255, 248, 246, 246),
                         blurRadius: 10,
@@ -135,34 +137,38 @@ class JobCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Flexible(
-                          flex: 5,
-                          child: Text(
-                            gigModel.createdBy!.username!.substring(0, 11) +
-                                '...',
-                            // overflow: TextOverflow.fade,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 12),
+                    InkWell(
+                      onTap: (){
+                        Get.to(()=>Profile2(gigModel.createdBy!.id??""));
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Flexible(
+                            flex: 5,
+                            child: Text(
+                              gigModel.createdBy!.username!.substring(0, 11) +
+                                  '...',
+                              style:const TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 12),
+                            ),
                           ),
-                        ),
-                        gigModel.createdBy!.phoneNumber != null
-                            ? SizedBox()
-                            : Flexible(
-                                flex: 1,
-                                child: Tooltip(
-                                    message: "unverified",
-                                    child: Icon(
-                                      Icons.verified,
-                                      size: 13,
-                                      color: gigModel.createdBy!.phoneNumber ==
-                                              null
-                                          ? Colors.grey
-                                          : Colors.green,
-                                    ))),
-                      ],
+                          gigModel.createdBy!.phoneNumber != null
+                              ? SizedBox()
+                              : Flexible(
+                                  flex: 1,
+                                  child: Tooltip(
+                                      message: "unverified",
+                                      child: Icon(
+                                        Icons.verified,
+                                        size: 13,
+                                        color: gigModel.createdBy!.phoneNumber ==
+                                                null
+                                            ? Colors.grey
+                                            : Colors.green,
+                                      ))),
+                        ],
+                      ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,

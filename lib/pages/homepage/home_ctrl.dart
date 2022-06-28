@@ -25,8 +25,8 @@ class HomeCtrl extends GetxController {
     "Jamshedpur",
     "MIT Manipal",
     "VIT Vellore",
-    "Jamshedpur",
-    "MIT Manipal",
+    "Pune",
+    "mumbai",
     "VIT Vellore",
     "Jamshedpur",
     "MIT Manipal",
@@ -46,16 +46,16 @@ class HomeCtrl extends GetxController {
   RefreshController refreshController =
       RefreshController(initialRefresh: false);
   bool gigsLoading = false;
-  Future getGigsPlease(context) async {
+
+  Future getGigsPlease() async {
     debugPrint('in get gis please');
-    await authCtrl.listenAccount(context);
-    await getGigs(authCtrl.user.cityToSearch ?? 'Jamshedpur', frominit: true);
+    // await authCtrl.listenAccount(context);
+    await getGigs(authCtrl.user.cityToSearch ?? cities[selectedCityIndex],
+        frominit: true);
   }
 
   final ConfettiController controllerBottomCenter =
-      ConfettiController(duration: const Duration(seconds: 2));
-  getChats() {}
-  addChat() {}
+      ConfettiController(duration: const Duration(microseconds: 10));
 
   getOngoingGigs() async {
     debugPrint("in get gigs ongoing");
@@ -102,9 +102,9 @@ class HomeCtrl extends GetxController {
     }
   }
 
-  acceptGig(id) async {
+  Future<bool?> acceptGig(id, p1) async {
     acceptLoading = true;
-        update([jobDetailsId]);
+    update([jobDetailsId]);
     debugPrint("in accept Gig");
     String apiUrl = "$baseUrl/gigs/updateGig/accept/$id";
     debugPrint(apiUrl);
@@ -112,28 +112,34 @@ class HomeCtrl extends GetxController {
       var response =
           await dio.put(apiUrl, data: {"acceptedBy": authCtrl.user.toJson()});
       if (response.statusCode == 200 || response.statusCode == 201) {
-         acceptLoading = false;
-    // update([acceptGigTextId]);
+        acceptLoading = false;
+        // update([acceptGigTextId]);
         debugPrint('response status : 200');
         update([jobDetailsId]);
         debugPrint(response.data.toString());
         if (response.data['modifiedCount'] == 0) {
           Get.back();
-
           Get.snackbar("sorry",
               "this gig has been accepted by someone😅, please refresh and try again😁");
+          return false;
         } else {
           controllerBottomCenter.play();
           update([jobDetailsId]);
+          final channel = authCtrl.client.channel('messaging', id: id,extraData: {"members": [p1, authCtrl.user.id!]});
+          await channel.create();      
+              // channel.watch();
+          await channel.addMembers([p1, authCtrl.user.id!]);
           Get.snackbar("success", "you have accepted this gig, lessgooo🥳");
+          return true;
         }
       } else {
         Get.snackbar("sorry",
             "this gig has been accepted by someone, please refresh and try again");
+        return false;
       }
     } catch (e) {
-       acceptLoading = false;
-        update([jobDetailsId]);
+      acceptLoading = false;
+      update([jobDetailsId]);
       debugPrint('error while accepting gig db: ${e.toString()}');
       Get.snackbar("sorry", "an error occurred ");
     }
@@ -149,6 +155,7 @@ class HomeCtrl extends GetxController {
       }
     }
     String apiUrl = "$baseUrl/gigs/getGigs/$city/$date/$id";
+    selectedCityIndex = cities.indexOf(city);
     debugPrint(apiUrl);
     try {
       var response = await dio.get(apiUrl);
@@ -165,7 +172,6 @@ class HomeCtrl extends GetxController {
         gigs.addAll(pagList);
         gigsLoading = false;
         debugPrint(gigs.length.toString());
-
         // if (fromRefresh) {
         //   refreshController = RefreshController(initialRefresh: false);
         //   // refreshController.dispose();
@@ -174,6 +180,15 @@ class HomeCtrl extends GetxController {
       }
     } catch (e) {
       debugPrint('error while getting gigs: ${e.toString()}');
+    }
+  }
+
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+    if (authCtrl.user.cityToSearch != null) {
+      selectedCityIndex = cities.indexOf(authCtrl.user.cityToSearch!);
     }
   }
 }

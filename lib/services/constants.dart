@@ -1,7 +1,7 @@
 const String baseUrl = 'https://lit-hamlet-78624.herokuapp.com';
 
 const String userBoxName = "userBoxName";
-
+final apiKey ="va4uewzr753r" ;
 //getbuilder ids
 const String authPageId = "authPageId";
 const String deadlineSelectId = "deadlineSelectId";
@@ -15,3 +15,4 @@ const String jobDetailsId = "jobDetailsId";
 const String ongoingListId = "ongoingListId";
 const String historyListId = "historyListId";
 const String acceptGigTextId = "acceptGigTextId";
+const String profile2id = "profile2id";

@@ -1,28 +1,22 @@
-import 'dart:developer';
-
-import 'package:beamer/beamer.dart';
 import 'package:dio/dio.dart';
 import 'package:easily/models/user_model.dart';
-import 'package:easily/pages/homepage/homepage.dart';
 import 'package:easily/services/constants.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive/hive.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
-
-import '../../widgets/dialog.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart' as stream;
 
 class AuthCtrl extends GetxController {
   bool hasInternet = false;
+  final client = stream.StreamChatClient(apiKey, logLevel: stream.Level.INFO);
   UserModel user =
       UserModel(superuser: false, rating: 0, numberOfRatings: 0, reviews: []);
   final GoogleSignIn googleSignIn = GoogleSignIn();
-  bool? isAuth;
   Dio dio = Dio();
   Box<UserModel?>? userBox;
   bool isLoading = true;
@@ -34,11 +28,24 @@ class AuthCtrl extends GetxController {
     user =
         UserModel(superuser: false, rating: 0, numberOfRatings: 0, reviews: []);
     userBox!.delete(0);
-    await googleSignIn.signOut();
+    onInit();
   }
 
   googleLogin() async {
-    await googleSignIn.signIn();
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+    await handleSignIn(googleUser, context);
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   createUserDb(GoogleSignInAccount gUser) async {
@@ -47,7 +54,6 @@ class AuthCtrl extends GetxController {
     // logger.d("in createUserDb");
     String apiUrl = "$baseUrl/users/createUser";
     debugPrint(apiUrl);
-
     user.id = gUser.id;
     user.email = gUser.email;
     user.username = gUser.displayName;
@@ -61,15 +67,17 @@ class AuthCtrl extends GetxController {
       if (response.statusCode == 200 || response.statusCode == 201) {
         debugPrint('response status : 200');
         user = UserModel.fromJson(response.data);
-        // if (kIsWeb) {
         isLoading = false;
         update([homePageId]);
-        // }
-        await userBox!.containsKey(0)
+        update([sideMenuId]);
+        if (userBox == null) debugPrint('userbox is null');
+        userBox!.containsKey(0)
             ? userBox!.putAt(0, user)
-            : userBox!.add(user);
-        debugPrint(userBox!.getAt(0)!.id!.toString());
-        return response;
+            : userBox!.put(0, user);
+        // debugPrint(userBox!.getAt(0)!.id!.toString());
+        // return response;
+        await client.connectUser(stream.User(id: user.id!), user.token!);
+
       }
     } catch (e) {
       debugPrint('error while creating user db: ${e.toString()}');
@@ -83,9 +91,9 @@ class AuthCtrl extends GetxController {
       var response = await dio.put(apiUrl, data: data);
       if (response.statusCode == 200 || response.statusCode == 201) {
         debugPrint('response status : 200');
-        await userBox!.containsKey(0)
+        userBox!.containsKey(0)
             ? userBox!.putAt(0, user)
-            : userBox!.add(user);
+            : userBox!.put(0, user);
       }
     } catch (e) {
       // logger.e('error while creating user db: ${e.toString()}');
@@ -114,131 +122,106 @@ class AuthCtrl extends GetxController {
     }
   }
 
-  checkUserInDb(context) async {
+  checkUserInDb(account, context) async {
     debugPrint('in checkUserInDb');
-    final GoogleSignInAccount? gUser = googleSignIn.currentUser;
-    // if (!await getBaseUrl()) return;
-    if (gUser != null) {
-      userJson = (await getUserDb(gUser));
+    if (account != null) {
+      userJson = (await getUserDb(account));
     }
-
     if (userJson == null) {
-      await createUserDb(gUser!);
+      await createUserDb(account!);
     } else {
-      //deserialize user
       user = UserModel.fromJson(userJson!);
-      // if (kIsWeb) {
       isLoading = false;
+      update([sideMenuId]);
       update([homePageId]);
-      // }
-      // if (!kIsWeb) {
       await storeUserDataInHive(context);
-      // } else {
-      //   Get.back();
-      // } //Check This
+                await client.connectUser(stream.User(id: user.id??""), user.token??"");
+
     }
   }
 
   storeUserDataInHive(context) async {
-    debugPrint("In store User Data In Hive" + user.toString());
-    userBox!.containsKey(0) ? userBox!.putAt(0, user) : userBox!.add(user);
-
+    debugPrint("In store User Data In Hive$user");
+    userBox!.containsKey(0) ? userBox!.putAt(0, user) : userBox!.put(0, user);
     // logger.d("user data stored in hive. Now nav to Home Page");
-    Get.to(() => HomePage());
+    // Get.to(() => HomePage());
     // Beamer.of(context).beamToNamed('/home');
   }
 
   handleSignIn(GoogleSignInAccount? account, context) async {
-    debugPrint("in handle Sign In Account");
+    debugPrint("in handle sign In Account");
     if (account != null) {
       debugPrint("Account = ${account.displayName}");
-      await checkUserInDb(context);
-
-      isAuth = true;
+      await checkUserInDb(account, context);
       isLoading = false;
-      update([authPageId]);
       update([sideMenuId]);
       update([homePageId]);
     } else {
       debugPrint("account logged out");
-      isAuth = false;
+      // isAuth = false;
       isLoading = false;
       update([homePageId]);
-      update([authPageId]);
       update([sideMenuId]);
     }
   }
 
-  listenAccount(context) async {
-    debugPrint("in listen account");
-    googleSignIn.onCurrentUserChanged.listen((account) {
-      debugPrint("hello inside the on current use chagen listennn");
-      handleSignIn(account!, context);
-    }, onError: (err) {
-      // if (kIsWeb) {
+  // listenAccount(context) async {
+  //   googleSignIn.onCurrentUserChanged.listen((account) {
+  //     debugPrint("listening to account");
+  //     handleSignIn(account!, context);
+  //   }, onError: (err) {
+  //     debugPrint("Error in listening account : $err");
+  //   }); //Reauthenticate when app is opened!!
+  //   await googleSignIn
+  //       .signInSilently(suppressErrors: false, reAuthenticate: true)
+  //       .then((account) {
+  //     debugPrint(" " + account.toString());
+  //     handleSignIn(account, context);
+  //   }).catchError((err) {
+  //     debugPrint("in listen account ERROR : $err");
+  // isAuth = false;
+  //     isLoading = false;
+  //     update([authPageId]);
+  //     update([homePageId]);
+  //   });
+  // }
 
-      // }
-      debugPrint("Error signing in : $err");
-    }); //Reauthenticate when app is opened!!
-    await googleSignIn
-        .signInSilently(suppressErrors: false, reAuthenticate: true)
-        .then((account) {
-      debugPrint(
-          "inside sing in silently error is here ig" + account.toString());
-      handleSignIn(account, context);
-    }).catchError((err) {
-      debugPrint("in listen account ERROR : $err");
-      isAuth = false;
-      isLoading = false;
-      update([authPageId]);
-      update([homePageId]);
-    });
-  }
-
-  Future checkInitialData() async {
-    // debugPrint("in check Initial Data");
-    // await FirebaseDatabase.instance
-    //     .ref()
-    //     .child("appDown")
-    //     .once()
-    //     .then((DatabaseEvent snapshot) {
-    //   appIsDown = snapshot.snapshot.value as bool;
-    //   debugPrint(snapshot.snapshot.value.runtimeType.toString());
-    //   // serverUrl = snapshot?.value;
-    //   debugPrint('appIsDown : $appIsDown');
-    // }).onError((error, stackTrace) {
-    //   debugPrint("Error while getting appIsDown: $error");
-    // });
-  }
+  Future checkInitialData() async {}
 
   void checkUserMethod(context) async {
     debugPrint("in checkUserMethod()");
-    var userData = await getUserDataFromHive();
+    UserModel? userData = await getUserDataFromHive();
     if (userData == null) {
-      debugPrint("User Data is Nulll in Hive Going to Listen account");
-      // await checkInternet();
-      await listenAccount(context);
-      // Get.to(() => const AuthPage());
+      debugPrint("account data not found internally");
+      isLoading = false;
+      update([homePageId]);
+      update([sideMenuId]);
+      // await listenAccount(context);
     } else {
-      debugPrint("user is Loggedin. => showing homepage");
-      debugPrint("userId of current Users" + user.id!);
-      // dlCtrl.initDynamicLinks();
-      Get.to(() => HomePage());
+      isLoading = false;
+      update([homePageId]);
+      update([sideMenuId]);
+      debugPrint('data is present internally');
+      // debugPrint(userData.toJson().toString());
+      debugPrint("userId of current User${user.id!}");
+          await client.connectUser(stream.User(id: user.id??""), user.token??"");
+
     }
   }
 
   getUserDataFromHive() {
-    debugPrint("in get user data from hive db");
+    debugPrint("in get user data from internal db");
     try {
       if (userBox != null) {
         debugPrint(userBox!.values.toString());
         user = userBox!.getAt(0)!;
-        return userBox;
+        return user;
       } else if (userBox == null) {
+        debugPrint('nothing is stored internally');
         return null;
       }
     } catch (e) {
-      // logger.d(e);
+      debugPrint('some error in getting data internally');
       return null;
     }
   }
@@ -246,17 +229,15 @@ class AuthCtrl extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // checkInitialData();
     userBox = Hive.box<UserModel>(userBoxName);
     checkUserMethod(context);
-
-    if (!kIsWeb) {
-      // here is the problem
-      InternetConnectionChecker().onStatusChange.listen((status) {
-        hasInternet = status == InternetConnectionStatus.connected;
-        debugPrint("Internet is Working : " + hasInternet.toString());
-        // if (hasInternet == false) Get.to(() => const NoInternet());
-      });
-    }
+    // if (!kIsWeb) {
+    //   // here is the problem
+    //   InternetConnectionChecker().onStatusChange.listen((status) {
+    //     hasInternet = status == InternetConnectionStatus.connected;
+    //     debugPrint("Internet is Working : " + hasInternet.toString());
+    //     // if (hasInternet == false) Get.to(() => const NoInternet());
+    //   });
+    // }
   }
 }

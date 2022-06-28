@@ -46,8 +46,11 @@ class UserModel {
   List<String?>? reviews;
   @HiveField(11)
   String? cityToSearch;
+  @HiveField(12)
+  String? token;
 
   UserModel({
+    this.token,
     this.id,
     this.username,
     this.fullname,
@@ -72,6 +75,7 @@ class UserModel {
     }
     id = json['id']?.toString();
     cityToSearch = json['cityToSearch']?.toString();
+    token = json['token']?.toString();
 
     username = json['username']?.toString();
     fullname = json['fullname']?.toString();
@@ -88,6 +92,7 @@ class UserModel {
     data['id'] = id;
     data['username'] = username;
     data['fullname'] = fullname;
+    data['token'] = token;
     if (reviews != null) {
       final v = reviews;
       final arr0 = [];

@@ -418,24 +418,34 @@ class _AddJobState extends State<AddJob> {
                                     height: 50,
                                     width: 200,
                                     child: DropdownSearch<String>(
-                                        popupElevation: 5,
-                                        mode: Mode.DIALOG,
+                                        // popupElevation: 5,
+                                        // mode: Mode.DIALOG,
+                                        popupProps:const PopupProps.dialog(showSearchBox:true),
                                         // showSelectedItem: true,
-                                        items: _.cities,
-                                        showSearchBox: true,
-                                        dropdownSearchDecoration:
-                                            const InputDecoration(
+                                        items: _.homeCtrl.cities,
+                                        // showSearchBox: true,
+                                         dropdownDecoratorProps : const DropDownDecoratorProps(
+                                          dropdownSearchDecoration:   InputDecoration(
                                                 border: InputBorder.none,
                                                 focusedBorder:
                                                     OutlineInputBorder(
                                                         borderSide: BorderSide(
                                                             color:
                                                                 Colors.black))),
+                                         ),
+                                        // dropdow:
+                                        //     const InputDecoration(
+                                        //         border: InputBorder.none,
+                                        //         focusedBorder:
+                                        //             OutlineInputBorder(
+                                        //                 borderSide: BorderSide(
+                                        //                     color:
+                                        //                         Colors.black))),
                                         // popupItemDisabled: (String s) => s.startsWith('I'),
                                         onChanged: (String? s) =>
                                             _.selectedCityIndex =
-                                                _.cities.indexOf(s ?? ''),
-                                        selectedItem: "Brazil"),
+                                                _.homeCtrl.cities.indexOf(s ?? ''),
+                                        selectedItem: _.homeCtrl.cities[0]),
                                   ),
                                 ],
                               );
@@ -463,19 +473,20 @@ class _AddJobState extends State<AddJob> {
                                     height: 50,
                                     width: 200,
                                     child: DropdownSearch<String>(
-                                        popupElevation: 5,
-                                        mode: Mode.DIALOG,
+                                        // popupElevation: 5,
+                                        // mode: Mode.DIALOG,
+                                        popupProps:const PopupProps.dialog(showSearchBox:true),
                                         // showSelectedItem: true,
                                         items: _.typeWork,
-                                        showSearchBox: true,
-                                        dropdownSearchDecoration:
-                                            const InputDecoration(
+                                        dropdownDecoratorProps : const DropDownDecoratorProps(
+                                          dropdownSearchDecoration:   InputDecoration(
                                                 border: InputBorder.none,
                                                 focusedBorder:
                                                     OutlineInputBorder(
                                                         borderSide: BorderSide(
                                                             color:
                                                                 Colors.black))),
+                                         ),
                                         // popupItemDisabled: (String s) => s.startsWith('I'),
                                         onChanged: (String? s) =>
                                             _.selectedTypeOfIndex =

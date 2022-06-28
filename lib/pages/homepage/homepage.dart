@@ -24,7 +24,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    homeCtrl.getGigsPlease(context);
+    debugPrint(homeCtrl.authCtrl.user.cityToSearch);
+    homeCtrl.getGigsPlease();
     homeCtrl.gigsListScrollCtrl.addListener(() {
       if (homeCtrl.gigsListScrollCtrl.position.pixels >=
           homeCtrl.gigsListScrollCtrl.position.maxScrollExtent) {
@@ -110,7 +111,7 @@ class _HomePageState extends State<HomePage> {
                                                       horizontal: 10.0,
                                                       vertical: 10),
                                                   child: InkWell(
-                                                      onTap: () {
+                                                      onTap: () async {
                                                         Navigator.pop(context);
                                                         homeCtrl.selectedCityIndex =
                                                             homeCtrl.cities
@@ -130,7 +131,8 @@ class _HomePageState extends State<HomePage> {
                                                                   .cityToSearch =
                                                               homeCtrl.cities[
                                                                   index];
-                                                          homeCtrl.authCtrl
+                                                          await homeCtrl
+                                                              .authCtrl
                                                               .updateUserDb(
                                                                   {
                                                                 'cityToSearch':
@@ -140,6 +142,10 @@ class _HomePageState extends State<HomePage> {
                                                                   homeCtrl
                                                                       .authCtrl
                                                                       .user);
+                                                          debugPrint(homeCtrl
+                                                              .authCtrl
+                                                              .user
+                                                              .cityToSearch);
                                                         }
                                                       },
                                                       child: Text(
@@ -157,13 +163,17 @@ class _HomePageState extends State<HomePage> {
                             padding: const EdgeInsets.only(right: 8.0),
                             child: Row(
                               children: [
-                                Text(
-                                  _.user.cityToSearch ??
-                                      homeCtrl
-                                          .cities[homeCtrl.selectedCityIndex],
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(color: Colors.black),
-                                ),
+                                GetBuilder<HomeCtrl>(
+                                    id: gigsListId,
+                                    builder: (_) {
+                                      return Text(
+                                        homeCtrl
+                                            .cities[homeCtrl.selectedCityIndex],
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                            color: Colors.black),
+                                      );
+                                    }),
                                 const Icon(
                                   Icons.location_on_rounded,
                                   color: Colors.black,

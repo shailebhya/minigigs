@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../demo.dart';
+import '../../profile2/review_card.dart';
 
 class Profile extends StatelessWidget {
   const Profile({Key? key}) : super(key: key);
@@ -190,15 +191,15 @@ class Profile extends StatelessWidget {
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 16)),
                                           onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (_) =>
-                                                    VerifyPhoneNumberScreen(
-                                                        phoneNumber:
-                                                            '+919334741294'),
-                                              ),
-                                            );
+                                            // Navigator.push(
+                                            //   context,
+                                            //   MaterialPageRoute(
+                                            //     builder: (_) =>
+                                            //         VerifyPhoneNumberScreen(
+                                            //             phoneNumber:
+                                            //                 '+919334741294'),
+                                            //   ),
+                                            // );
                                           }),
                                     )
                                   : Text(
@@ -231,20 +232,46 @@ class Profile extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 15,
                         ),
                         Text(
                           _.user.phoneNumber == null
                               ? "note: get your profile verified by addding your ph. number!"
                               : "your profile is verified!",
-                          style: TextStyle(
+                          style:const  TextStyle(
                               fontWeight: FontWeight.w600, fontSize: 10),
                         )
                       ]),
                     ),
                   ),
                 ),
+                const  SizedBox(
+                          height: 15,
+                        ),
+                         Row(mainAxisAlignment: MainAxisAlignment.center,
+                           children: [
+                             const Text(
+                  "ratings & reviews",
+                  style: TextStyle(fontSize: 20, color: Colors.grey),
+                ),
+                           ],
+                         ),   const  SizedBox(
+                          height: 10,
+                        ),
+                Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: 10,
+                  itemBuilder: (context, index) {
+                    return const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 7.0),
+                      child: ReviewCard(),
+                    );
+                  }),
+            )
               ]),
             ),
           );

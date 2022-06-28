@@ -3,19 +3,15 @@ import 'dart:ui';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:confetti/confetti.dart';
-import 'package:easily/demo.dart';
 import 'package:easily/models/gig_model.dart';
-import 'package:easily/pages/auth/auth_ctrl.dart';
 import 'package:easily/pages/chats/chat_page.dart';
 import 'package:easily/pages/homepage/home_ctrl.dart';
 import 'package:easily/pages/homepage/photo_viewer.dart';
+import 'package:easily/pages/profile2/profile2.dart';
 import 'package:easily/services/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
-import '../../widgets/responsive.dart';
-import '../../widgets/size_config.dart';
 
 class JobDetails extends StatefulWidget {
   GigModel gigModel;
@@ -36,7 +32,7 @@ class _JobDetailsState extends State<JobDetails> {
               centerTitle: true,
               shadowColor: Colors.transparent,
               backgroundColor: Colors.grey[50],
-              title:const Text(
+              title: const Text(
                 "details",
                 style:
                     TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -45,7 +41,7 @@ class _JobDetailsState extends State<JobDetails> {
             body: Stack(
               children: [
                 Container(
-                  decoration:const BoxDecoration(
+                  decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
                           topRight: Radius.circular(20),
@@ -76,31 +72,33 @@ class _JobDetailsState extends State<JobDetails> {
                             return Builder(
                               builder: (BuildContext context) {
                                 return InkWell(
-                                  onTap: (){
-                                        Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => GalleryPhotoViewWrapper(
-          galleryItems: widget.gigModel.images!,
-          backgroundDecoration: const BoxDecoration(
-            color: Colors.black,
-          ),
-          initialIndex: widget.gigModel.images!.indexOf(i),
-          scrollDirection: Axis.horizontal,
-        ),
-      ),
-    );
-  
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            GalleryPhotoViewWrapper(
+                                          galleryItems: widget.gigModel.images!,
+                                          backgroundDecoration:
+                                              const BoxDecoration(
+                                            color: Colors.black,
+                                          ),
+                                          initialIndex: widget.gigModel.images!
+                                              .indexOf(i),
+                                          scrollDirection: Axis.horizontal,
+                                        ),
+                                      ),
+                                    );
                                   },
                                   child: Container(
                                       width: MediaQuery.of(context).size.width,
-                                      margin:
-                                         const EdgeInsets.symmetric(horizontal: 5.0),
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 5.0),
                                       decoration: BoxDecoration(
                                           image: DecorationImage(
                                               fit: BoxFit.fitHeight,
                                               image: NetworkImage(i ?? "")),
-                                          boxShadow: const[
+                                          boxShadow: const [
                                             BoxShadow(
                                                 color: Color.fromARGB(
                                                     255, 248, 246, 246),
@@ -112,24 +110,25 @@ class _JobDetailsState extends State<JobDetails> {
                                           borderRadius:
                                               BorderRadius.circular(15)),
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                           ClipRect(
-                                              child:  BackdropFilter(
-                                            filter:  ImageFilter.blur(
+                                          ClipRect(
+                                              child: BackdropFilter(
+                                            filter: ImageFilter.blur(
                                                 sigmaX: 10.0, sigmaY: 10.0),
-                                            child:  Container(
+                                            child: Container(
                                               width: 40.0,
                                               height: 20.0,
-                                              decoration:  BoxDecoration(
+                                              decoration: BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.circular(5),
                                                   color: Colors.grey.shade200
                                                       .withOpacity(0.2)),
-                                              child:  Center(
-                                                child:  Text(
+                                              child: Center(
+                                                child: Text(
                                                     '${widget.gigModel.images!.indexOf(i) + 1}',
                                                     style: Theme.of(context)
                                                         .textTheme
@@ -159,43 +158,52 @@ class _JobDetailsState extends State<JobDetails> {
                       const SizedBox(
                         height: 10,
                       ),
-                      Row(
-                        children: [
-                          CircleAvatar(
-                              backgroundColor: Colors.blue[300],
-                              radius: 20,
-                              backgroundImage: NetworkImage(
-                                  widget.gigModel.createdBy!.img ?? "")),
-                          const SizedBox(width: 5),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.gigModel.createdBy!.username ??
-                                    "loading...",
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w600, fontSize: 15),
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    widget.gigModel.createdBy!.rating == 0
-                                        ? '.'
-                                        : ' ${(widget.gigModel.createdBy!.rating! / widget.gigModel.createdBy!.numberOfRatings!).toStringAsFixed(2)}',
-                                    style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const Icon(
-                                    Icons.star,
-                                    size: 20,
-                                    color: const Color.fromARGB(255, 246, 222, 2),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
+                      InkWell(
+                        onTap: () {
+                          if (widget.gigModel.createdBy != null) {
+                            Get.to(() =>
+                                Profile2(widget.gigModel.createdBy!.id ?? ""));
+                          }
+                        },
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                                backgroundColor: Colors.blue[300],
+                                radius: 20,
+                                backgroundImage: NetworkImage(
+                                    widget.gigModel.createdBy!.img ?? "")),
+                            const SizedBox(width: 5),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.gigModel.createdBy!.username ??
+                                      "loading...",
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 15),
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      widget.gigModel.createdBy!.rating == 0
+                                          ? '.'
+                                          : ' ${(widget.gigModel.createdBy!.rating! / widget.gigModel.createdBy!.numberOfRatings!).toStringAsFixed(2)}',
+                                      style: const TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const Icon(
+                                      Icons.star,
+                                      size: 20,
+                                      color: Color.fromARGB(255, 246, 222, 2),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                       const SizedBox(
                         height: 15,
@@ -210,20 +218,20 @@ class _JobDetailsState extends State<JobDetails> {
                           ),
                         ],
                       ),
-                     const SizedBox(
+                      const SizedBox(
                         height: 15,
                       ),
                       Row(
                         children: [
-                         const Text("city: "),
+                          const Text("city: "),
                           Text(
                             widget.gigModel.city ?? "",
-                            style:const TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 15),
                           ),
                         ],
                       ),
-                    const  SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Row(
@@ -275,16 +283,16 @@ class _JobDetailsState extends State<JobDetails> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                              const  Text("more info :",
+                                const Text("more info :",
                                     style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600)),
-                             const   SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Text(
                                   widget.gigModel.description ?? "",
-                                  style:const TextStyle(fontSize: 16),
+                                  style: const TextStyle(fontSize: 16),
                                 ),
                               ],
                             )),
@@ -292,11 +300,12 @@ class _JobDetailsState extends State<JobDetails> {
                       const SizedBox(
                         height: 10,
                       ),
-                      widget.gigModel.acceptedBy!.id == null
+                      widget.gigModel.acceptedBy!.id != _.authCtrl.user.id
                           ? const SizedBox()
                           : Container(
                               decoration: BoxDecoration(
-                                  color: const Color.fromARGB(255, 227, 224, 227),
+                                  color:
+                                      const Color.fromARGB(255, 227, 224, 227),
                                   borderRadius: BorderRadius.circular(10)),
                               child: Padding(
                                   padding: const EdgeInsets.all(12.0),
@@ -326,11 +335,21 @@ class _JobDetailsState extends State<JobDetails> {
                           widget.gigModel.acceptedBy!.id ==
                               _.authCtrl.user.id) ...[
                         InkWell(
-                          onTap: () => Get.to(() => const ChatPage()),
+                          onTap: () async {
+                            if (widget.gigModel.createdBy != null) {
+                              final channel = _.authCtrl.client.channel(
+                                  'messaging',
+                                  id: widget.gigModel.id);
+                              await channel.watch();
+                              Get.to(()=>
+                                  ChatPage(widget.gigModel,client: _.authCtrl.client, channel: channel));
+                            }
+                          },
                           child: Container(
                               width: 150,
                               decoration: BoxDecoration(
-                                  color: const Color.fromARGB(255, 108, 33, 229),
+                                  color:
+                                      const Color.fromARGB(255, 108, 33, 229),
                                   borderRadius: BorderRadius.circular(20)),
                               child: Padding(
                                 padding: const EdgeInsets.all(10.0),
@@ -359,44 +378,50 @@ class _JobDetailsState extends State<JobDetails> {
                         height: 10,
                       ),
                       InkWell(
-                        onTap: () async {
-                          //confirmation alert to check it ..
-                          //plese accept it only if you are very sure that yoyu can do ti
-                          if (_.authCtrl.user.id != null) {
-                            if (widget.gigModel.acceptedBy!.id ==
-                                _.authCtrl.user.id) {
-                              _.controllerBottomCenter.play();
-                              Get.snackbar("already accepted",
-                                  "you have already accepted this gig, lessgooo🥳");
+                          onTap: () async {
+                            //confirmation alert to check it ..
+                            //plese accept it only if you are very sure that yoyu can do ti
+                            if (_.authCtrl.user.id != null) {
+                              if (widget.gigModel.acceptedBy!.id ==
+                                  _.authCtrl.user.id) {
+                                _.controllerBottomCenter.play();
+                                Get.snackbar("already accepted",
+                                    "you have already accepted this gig, lessgooo🥳");
+                              } else {
+                                await _.acceptGig(widget.gigModel.id,widget.gigModel.createdBy!.id) == true
+                                    ? widget.gigModel.acceptedBy =
+                                        _.authCtrl.user
+                                    : null;
+                              }
                             } else {
-                              await _.acceptGig(widget.gigModel.id);
-                              widget.gigModel.acceptedBy = _.authCtrl.user;
+                              Get.back();
+                              Get.snackbar("login required",
+                                  "please login from the side menu");
                             }
-                          } else {
-                            Get.back();
-                            Get.snackbar("login required",
-                                "please login from the side menu");
-                          }
-                        },
-                        child:Container(
-                                width: 150,
-                                decoration: BoxDecoration(
-                                    color: const Color.fromARGB(255, 0, 0, 0),
-                                    borderRadius: BorderRadius.circular(20)),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Center(
-                                      child:_.acceptLoading?const CircularProgressIndicator(strokeWidth: 2,color: Colors.white,): Text(
-                                    _.authCtrl.user.id != null &&
+                          },
+                          child: Container(
+                              width: 150,
+                              decoration: BoxDecoration(
+                                  color: const Color.fromARGB(255, 0, 0, 0),
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Center(
+                                    child: _.acceptLoading
+                                        ? const CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            color: Colors.white,
+                                          )
+                                        : Text(
                                             widget.gigModel.acceptedBy!.id ==
-                                                _.authCtrl.user.id
-                                        ? 'accepted🔒'
-                                        : "accept gig",
-                                    style: const TextStyle(
-                                        color: Colors.white, fontSize: 16),
-                                  )),
-                                ))
-                      ),
+                                                    _.authCtrl.user.id
+                                                ? 'accepted🔒'
+                                                : "accept gig",
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16),
+                                          )),
+                              ))),
                     ]),
                   ),
                 ),

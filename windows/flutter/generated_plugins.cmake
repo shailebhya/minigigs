@@ -3,7 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  smart_auth
+  connectivity_plus_windows
   url_launcher_windows
 )
 
