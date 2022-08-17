@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_new
+// ignore_for_file: unnecessary_new, unnecessary_string_escapes
 
 import 'dart:io';
 import 'dart:ui';
@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AddJob extends StatefulWidget {
-  AddJob({Key? key}) : super(key: key);
+  const AddJob({Key? key}) : super(key: key);
 
   @override
   State<AddJob> createState() => _AddJobState();
@@ -268,6 +268,7 @@ class _AddJobState extends State<AddJob> {
                           style: const TextStyle(
                               fontSize: 20, fontWeight: FontWeight.w600),
                           autovalidateMode: AutovalidateMode.always,
+                          // ignore: duplicate_ignore
                           decoration: const InputDecoration(
                               // enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black,width: 2),borderRadius: BorderRadius.all(Radius.circular(10))),
                               focusedBorder: OutlineInputBorder(
@@ -342,7 +343,6 @@ class _AddJobState extends State<AddJob> {
                               fontSize: 20, fontWeight: FontWeight.w600),
                           autovalidateMode: AutovalidateMode.always,
                           decoration: const InputDecoration(
-                              // enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black,width: 2),borderRadius: BorderRadius.all(Radius.circular(10))),
                               focusedBorder: OutlineInputBorder(
                                   borderSide:
                                       BorderSide(color: Colors.black, width: 1),
@@ -433,15 +433,6 @@ class _AddJobState extends State<AddJob> {
                                                             color:
                                                                 Colors.black))),
                                          ),
-                                        // dropdow:
-                                        //     const InputDecoration(
-                                        //         border: InputBorder.none,
-                                        //         focusedBorder:
-                                        //             OutlineInputBorder(
-                                        //                 borderSide: BorderSide(
-                                        //                     color:
-                                        //                         Colors.black))),
-                                        // popupItemDisabled: (String s) => s.startsWith('I'),
                                         onChanged: (String? s) =>
                                             _.selectedCityIndex =
                                                 _.homeCtrl.cities.indexOf(s ?? ''),
@@ -577,19 +568,24 @@ class _AddJobState extends State<AddJob> {
                               },
                             );
                           },
-                          child: Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.black,
-                                  borderRadius: BorderRadius.circular(20)),
-                              child: const Padding(
-                                padding: EdgeInsets.all(10.0),
-                                child: Center(
-                                    child: Text(
-                                  "post gig",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 16),
+                          child: Material(
+                            elevation: 6,
+                                                                        borderRadius: BorderRadius.circular(20),
+
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: const Padding(
+                                  padding: EdgeInsets.all(10.0),
+                                  child: Center(
+                                      child: Text(
+                                    "post gig",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 16),
+                                  )),
                                 )),
-                              )),
+                          ),
                         ),
                       ]),
                     ),

@@ -31,6 +31,8 @@ class GigModel {
 */
   String? id;
   List<String?>? images;
+  List<String?>? viewedBy;//list of ids of people who have viewed this gig
+  int? viewedNos;//number of people who have viewed this gig
   String? title;
   String? description;
   String? location;
@@ -51,6 +53,8 @@ class GigModel {
 
   GigModel({
     this.id,
+    this.viewedBy,
+    this.viewedNos,
     this.images,
     this.imagesId,
     this.isRemote,
@@ -79,10 +83,19 @@ class GigModel {
       });
       images = arr0;
     }
+        if (json['viewedBy'] != null && (json['viewedBy'] is List)) {
+      final v = json['viewedBy'];
+      final arr0 = <String>[];
+      v.forEach((v) {
+        arr0.add(v.toString());
+      });
+      viewedBy = arr0;
+    }
     title = json['title']?.toString();
     imagesId = json['imagesId']?.toString();
     id = json['_id']?.toString();
     isRemote = json['isRemote'];
+    viewedNos = int.tryParse(json['viewedNos']?.toString() ?? '');
 
     description = json['description']?.toString();
     location = json['location']?.toString();
@@ -120,9 +133,18 @@ class GigModel {
       }
       data['images'] = arr0;
     }
+        if (viewedBy != null) {
+      final v = viewedBy;
+      final arr0 = [];
+      for (var v in v!) {
+        arr0.add(v);
+      }
+      data['viewedBy'] = arr0;
+    }
     data['title'] = title;
     data['imagesId'] = imagesId;
     data['isRemote'] = isRemote;
+    data['viewedNos'] = viewedNos;
 
     data['description'] = description;
     data['location'] = location;

@@ -12,7 +12,7 @@ class HistoryItemView extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         shadowColor: Colors.transparent,
-        backgroundColor: Colors.grey[50],
+        backgroundColor: Colors.white,
         title: Text(
           "Details",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),

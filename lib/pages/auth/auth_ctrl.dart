@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:easily/models/user_model.dart';
 import 'package:easily/services/constants.dart';
@@ -70,13 +72,13 @@ class AuthCtrl extends GetxController {
         isLoading = false;
         update([homePageId]);
         update([sideMenuId]);
-        if (userBox == null) debugPrint('userbox is null');
-        userBox!.containsKey(0)
+        if (userBox == null) log('userbox is null');
+      else{  userBox!.containsKey(0)
             ? userBox!.putAt(0, user)
-            : userBox!.put(0, user);
+            : userBox!.put(0, user);}
         // debugPrint(userBox!.getAt(0)!.id!.toString());
         // return response;
-        await client.connectUser(stream.User(id: user.id!), user.token!);
+        await client.connectUser(stream.User(name: user.username,id: user.id!), user.token!);
 
       }
     } catch (e) {
@@ -135,7 +137,7 @@ class AuthCtrl extends GetxController {
       update([sideMenuId]);
       update([homePageId]);
       await storeUserDataInHive(context);
-                await client.connectUser(stream.User(id: user.id??""), user.token??"");
+                await client.connectUser(stream.User(name: user.username,id: user.id??""), user.token??"");
 
     }
   }
@@ -204,7 +206,7 @@ class AuthCtrl extends GetxController {
       debugPrint('data is present internally');
       // debugPrint(userData.toJson().toString());
       debugPrint("userId of current User${user.id!}");
-          await client.connectUser(stream.User(id: user.id??""), user.token??"");
+          await client.connectUser(stream.User(name: user.username,id: user.id??""), user.token??"");
 
     }
   }

@@ -12,6 +12,7 @@ import 'package:easily/services/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 
 class JobDetails extends StatefulWidget {
   GigModel gigModel;
@@ -28,10 +29,14 @@ class _JobDetailsState extends State<JobDetails> {
         id: jobDetailsId,
         builder: (_) {
           return Scaffold(
+            floatingActionButton: FloatingActionButton.extended(onPressed: (){
+              Share.share('check out my website https://minigigs.in');
+            }, backgroundColor: favColor,icon: const Icon(Icons.share),label: const Text('share')),
             appBar: AppBar(
+              
               centerTitle: true,
               shadowColor: Colors.transparent,
-              backgroundColor: Colors.grey[50],
+              backgroundColor: Colors.white,
               title: const Text(
                 "details",
                 style:
@@ -90,57 +95,61 @@ class _JobDetailsState extends State<JobDetails> {
                                       ),
                                     );
                                   },
-                                  child: Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 5.0),
-                                      decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              fit: BoxFit.fitHeight,
-                                              image: NetworkImage(i ?? "")),
-                                          boxShadow: const [
-                                            BoxShadow(
-                                                color: Color.fromARGB(
-                                                    255, 248, 246, 246),
-                                                blurRadius: 4,
-                                                offset: Offset(0, 3),
-                                                spreadRadius: 5),
-                                          ],
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(15)),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          ClipRect(
-                                              child: BackdropFilter(
-                                            filter: ImageFilter.blur(
-                                                sigmaX: 10.0, sigmaY: 10.0),
-                                            child: Container(
-                                              width: 40.0,
-                                              height: 20.0,
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                  color: Colors.grey.shade200
-                                                      .withOpacity(0.2)),
-                                              child: Center(
-                                                child: Text(
-                                                    '${widget.gigModel.images!.indexOf(i) + 1}',
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyMedium),
+                                  child: Material(
+                                    // elevation: 6,
+                                    // borderRadius: BorderRadius.circular(15),
+                                    child: Container(
+                                        width: MediaQuery.of(context).size.width,
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 5.0),
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                fit: BoxFit.fitHeight,
+                                                image: NetworkImage(i ?? "")),
+                                            boxShadow: const [
+                                              BoxShadow(
+                                                  color: Color.fromARGB(
+                                                      255, 248, 246, 246),
+                                                  blurRadius: 4,
+                                                  offset: Offset(0, 3),
+                                                  spreadRadius: 5),
+                                            ],
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(15)),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            ClipRect(
+                                                child: BackdropFilter(
+                                              filter: ImageFilter.blur(
+                                                  sigmaX: 10.0, sigmaY: 10.0),
+                                              child: Container(
+                                                width: 40.0,
+                                                height: 20.0,
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(5),
+                                                    color: Colors.grey.shade200
+                                                        .withOpacity(0.2)),
+                                                child: Center(
+                                                  child: Text(
+                                                      '${widget.gigModel.images!.indexOf(i) + 1}',
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyMedium),
+                                                ),
                                               ),
-                                            ),
-                                          )),
-                                          const SizedBox(
-                                            height: 5,
-                                          )
-                                        ],
-                                      )),
+                                            )),
+                                            const SizedBox(
+                                              height: 5,
+                                            )
+                                          ],
+                                        )),
+                                  ),
                                 );
                               },
                             );
@@ -150,10 +159,27 @@ class _JobDetailsState extends State<JobDetails> {
                       const SizedBox(
                         height: 20,
                       ),
-                      Text(
-                        widget.gigModel.title ?? "",
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 17),
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 5,
+                            child: Text(
+                              widget.gigModel.title ?? "",
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 17),
+                            ),
+                          ),
+                            Expanded(
+                              flex: 1,
+                              child: Row(
+                              children: [
+                                                            Text('report',style: TextStyle(fontSize: 10),),
+                            SizedBox(width: 2,),
+                                Icon(Icons.report_gmailerrorred,color: Colors.red,size: 15,),
+                              ],
+                                                      ),
+                            )
+                        ],
                       ),
                       const SizedBox(
                         height: 10,
@@ -226,6 +252,20 @@ class _JobDetailsState extends State<JobDetails> {
                           const Text("city: "),
                           Text(
                             widget.gigModel.city ?? "",
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 15),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                       Row(
+                        children: [
+                          const Text("posted at: "),
+                          Text(
+                            DateFormat('dd, MMM HH:mm').format(
+                                DateTime.parse(widget.gigModel.createdAt!)),
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 15),
                           ),
@@ -337,12 +377,11 @@ class _JobDetailsState extends State<JobDetails> {
                         InkWell(
                           onTap: () async {
                             if (widget.gigModel.createdBy != null) {
-                              final channel = _.authCtrl.client.channel(
-                                  'messaging',
-                                  id: widget.gigModel.id);
+                              final channel = _.authCtrl.client
+                                  .channel('messaging', id: widget.gigModel.id);
                               await channel.watch();
-                              Get.to(()=>
-                                  ChatPage(widget.gigModel,client: _.authCtrl.client, channel: channel));
+                              Get.to(() => ChatPage(widget.gigModel,
+                                  client: _.authCtrl.client, channel: channel));
                             }
                           },
                           child: Container(
@@ -382,13 +421,23 @@ class _JobDetailsState extends State<JobDetails> {
                             //confirmation alert to check it ..
                             //plese accept it only if you are very sure that yoyu can do ti
                             if (_.authCtrl.user.id != null) {
+                              if (widget.gigModel.createdBy!.id ==
+                                  _.authCtrl.user.id) {
+                                Get.back();
+                                Get.snackbar("well well well",
+                                    "lets not try to accept our own gig 😅");
+                                // Get.back();
+                                return;
+                              }
                               if (widget.gigModel.acceptedBy!.id ==
                                   _.authCtrl.user.id) {
                                 _.controllerBottomCenter.play();
                                 Get.snackbar("already accepted",
                                     "you have already accepted this gig, lessgooo🥳");
                               } else {
-                                await _.acceptGig(widget.gigModel.id,widget.gigModel.createdBy!.id) == true
+                                await _.acceptGig(widget.gigModel.id,
+                                            widget.gigModel.createdBy!.id) ==
+                                        true
                                     ? widget.gigModel.acceptedBy =
                                         _.authCtrl.user
                                     : null;
@@ -399,29 +448,36 @@ class _JobDetailsState extends State<JobDetails> {
                                   "please login from the side menu");
                             }
                           },
-                          child: Container(
-                              width: 150,
-                              decoration: BoxDecoration(
-                                  color: const Color.fromARGB(255, 0, 0, 0),
-                                  borderRadius: BorderRadius.circular(20)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Center(
-                                    child: _.acceptLoading
-                                        ? const CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                            color: Colors.white,
-                                          )
-                                        : Text(
-                                            widget.gigModel.acceptedBy!.id ==
-                                                    _.authCtrl.user.id
-                                                ? 'accepted🔒'
-                                                : "accept gig",
-                                            style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 16),
-                                          )),
-                              ))),
+                          child: Material(
+                            elevation: 6,
+                            borderRadius: BorderRadius.circular(20),
+                            child: Container(
+                                width: 150,
+                                decoration: BoxDecoration(
+                                    color: const Color.fromARGB(255, 0, 0, 0),
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Center(
+                                      child: _.acceptLoading
+                                          ? const CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              color: Colors.white,
+                                            )
+                                          : Text(
+                                              widget.gigModel.acceptedBy!.id ==
+                                                      _.authCtrl.user.id
+                                                  ? 'accepted🔒'
+                                                  : "accept gig",
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16),
+                                            )),
+                                )),
+                          )),
+                      SizedBox(
+                        height: 10,
+                      )
                     ]),
                   ),
                 ),

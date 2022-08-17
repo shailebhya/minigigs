@@ -1,7 +1,10 @@
+import 'package:flutter/material.dart';
+
 const String baseUrl = 'https://lit-hamlet-78624.herokuapp.com';
 
 const String userBoxName = "userBoxName";
-final apiKey ="va4uewzr753r" ;
+final apiKey = "va4uewzr753r";
+ Color favColor = const Color.fromARGB(255, 108, 33, 229);
 //getbuilder ids
 const String authPageId = "authPageId";
 const String deadlineSelectId = "deadlineSelectId";

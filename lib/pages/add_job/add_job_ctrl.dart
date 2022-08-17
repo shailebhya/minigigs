@@ -86,11 +86,11 @@ class AddJobCtrl extends GetxController {
   bool checkData() {
     if (titleCtrl.text.isEmpty ||
         descCtrl.text.isEmpty ||
-        !baseAmtCtrl.text.isNumericOnly ||
+        !baseAmtCtrl.text.isNumericOnly ||int.parse(baseAmtCtrl.text)>10000||
         locationCtrl.text.isEmpty) {
       Get.snackbar(
         "hmmmm..",
-        "please fill the required fields.",
+        "please fill the required fields appropriately.",
       );
       return false;
     }

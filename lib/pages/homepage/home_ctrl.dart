@@ -3,17 +3,21 @@ import 'dart:developer';
 import 'package:confetti/confetti.dart';
 import 'package:dio/dio.dart';
 import 'package:easily/models/gig_model.dart';
+import 'package:easily/models/review_model.dart';
 import 'package:easily/services/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 import '../auth/auth_ctrl.dart';
 
 class HomeCtrl extends GetxController {
   final authCtrl = Get.put<AuthCtrl>(AuthCtrl());
   ScrollController gigsListScrollCtrl = ScrollController();
+  TextEditingController reviewCtrl = TextEditingController();
+  ReviewModel reviewModel = ReviewModel(likes: []);
   List<GigModel> gigs = [];
   List<GigModel> ongoingGigs = [];
   List<GigModel> historyGigs = [];
@@ -47,6 +51,26 @@ class HomeCtrl extends GetxController {
       RefreshController(initialRefresh: false);
   bool gigsLoading = false;
 
+  Future completeGig(GigModel gig) async {
+    debugPrint("in update Gig");
+    String apiUrl = "$baseUrl/gigs/updateGig/complete/${gig.id}";
+    try {
+      var response = await dio
+          .put(apiUrl, data: {"completedAt": DateTime.now().toString()});
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        debugPrint('response status : 200');
+        Get.snackbar('awesome!🎉', 'you have successfully completed the gig!');
+      } else {
+        Get.back();
+        Get.snackbar("sorryy!!", 'some error occured!😭, please try again');
+      }
+    } catch (e) {
+      Get.back();
+      Get.snackbar("sorryy!!", 'some error occured!😭, please try again');
+      // debugPrint('error while creating user db: ${e.toString()}');
+    }
+  }
+
   Future getGigsPlease() async {
     debugPrint('in get gis please');
     // await authCtrl.listenAccount(context);
@@ -77,6 +101,43 @@ class HomeCtrl extends GetxController {
       }
     } catch (e) {
       debugPrint('error while getting ongoing gigs: ${e.toString()}');
+    }
+  }
+
+  Future postReview(hostId, gigId, userId, username) async {
+    reviewModel = ReviewModel(likes: []);
+    debugPrint('posting your review');
+    String apiUrl = "$baseUrl/reviews/postReview";
+    debugPrint(apiUrl);
+    reviewModel.date = DateTime.now().toString();
+    reviewModel.desc = reviewCtrl.text;
+    reviewModel.likesNum = 0;
+    reviewModel.receiverId = hostId;
+    reviewModel.rating = rating;
+    reviewModel.gigId = gigId;
+    reviewModel.userid = userId;
+    reviewModel.username = username;
+    try {
+      var response = await dio.post(apiUrl, data: reviewModel.toJson());
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        debugPrint('review succesfully posted');
+      }
+    } catch (e) {
+      debugPrint('error while posting the review: ${e.toString()}');
+    }
+  }
+
+  Future updateReview() async {
+    debugPrint('posting your review');
+    String apiUrl = "$baseUrl/reviews/postReview";
+    debugPrint(apiUrl);
+    try {
+      var response = await dio.post(apiUrl, data: {});
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        debugPrint('review succesfully posted');
+      }
+    } catch (e) {
+      debugPrint('error while posting the review: ${e.toString()}');
     }
   }
 
@@ -125,10 +186,13 @@ class HomeCtrl extends GetxController {
         } else {
           controllerBottomCenter.play();
           update([jobDetailsId]);
-          final channel = authCtrl.client.channel('messaging', id: id,extraData: {"members": [p1, authCtrl.user.id!]});
-          await channel.create();      
-              // channel.watch();
-          await channel.addMembers([p1, authCtrl.user.id!]);
+          final channel =
+              authCtrl.client.channel('messaging', id: id, extraData: {
+            "members": [p1, authCtrl.user.id]
+          });
+          await channel.watch();
+          // channel.watch();
+          // await channel.addMembers([ authCtrl.user.id!]);
           Get.snackbar("success", "you have accepted this gig, lessgooo🥳");
           return true;
         }
@@ -185,7 +249,6 @@ class HomeCtrl extends GetxController {
 
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     if (authCtrl.user.cityToSearch != null) {
       selectedCityIndex = cities.indexOf(authCtrl.user.cityToSearch!);

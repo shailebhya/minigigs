@@ -8,7 +8,7 @@ class ReviewModel {
   "username": "",
   "userid": "",
   "date": "",
-  "review": 2.4,
+  "rating": 2.4,
   "title": "",
   "desc": "",
   "likes": [
@@ -20,10 +20,12 @@ class ReviewModel {
 */
 
   String? receiverId;
+    String? gigId;
+
   String? username;
   String? userid;
   String? date;
-  double? review;
+  double? rating;
   String? title;
   String? desc;
   List<String?>? likes;
@@ -32,10 +34,11 @@ class ReviewModel {
 
   ReviewModel({
     this.receiverId,
+    this.gigId,
     this.username,
     this.userid,
     this.date,
-    this.review,
+    this.rating,
     this.title,
     this.desc,
     this.likes,
@@ -45,9 +48,11 @@ class ReviewModel {
   ReviewModel.fromJson(Map<String, dynamic> json) {
     receiverId = json['receiverId']?.toString();
     username = json['username']?.toString();
+        gigId = json['gigId']?.toString();
+
     userid = json['userid']?.toString();
     date = json['date']?.toString();
-    review = double.tryParse(json['review']?.toString() ?? '');
+    rating = double.tryParse(json['rating']?.toString() ?? '');
     title = json['title']?.toString();
     desc = json['desc']?.toString();
   if (json['likes'] != null && (json['likes'] is List)) {
@@ -65,9 +70,11 @@ class ReviewModel {
     final data = <String, dynamic>{};
     data['receiverId'] = receiverId;
     data['username'] = username;
+        data['gigId'] = gigId;
+
     data['userid'] = userid;
     data['date'] = date;
-    data['review'] = review;
+    data['rating'] = rating;
     data['title'] = title;
     data['desc'] = desc;
     if (likes != null) {

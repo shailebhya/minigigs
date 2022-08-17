@@ -184,7 +184,7 @@ class _HomePageState extends State<HomePage> {
                     ],
                     centerTitle: true,
                     shadowColor: Colors.transparent,
-                    backgroundColor: Colors.grey[50],
+                    backgroundColor: Colors.white,
                     title: const Text(
                       "minigigs",
                       style: TextStyle(
