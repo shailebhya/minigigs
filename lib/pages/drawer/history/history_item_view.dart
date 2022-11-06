@@ -124,7 +124,7 @@ class HistoryItemView extends StatelessWidget {
 
             Container(
               decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 227, 224, 227),
+                  color: Color.fromARGB(255, 242, 240, 242),
                   borderRadius: BorderRadius.circular(20)),
               child: Padding(
                   padding: const EdgeInsets.all(12.0),
@@ -163,7 +163,7 @@ class HistoryItemView extends StatelessWidget {
                 ? SizedBox()
                 : Container(
                     decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 227, 224, 227),
+                        color: Color.fromARGB(255, 242, 240, 242),
                         borderRadius: BorderRadius.circular(20)),
                     child: Padding(
                         padding: const EdgeInsets.all(12.0),

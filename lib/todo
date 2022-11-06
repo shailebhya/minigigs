@@ -1,0 +1,27 @@
+[] collect and show reviews
+[] build the report mechanism
+[] dont show flagged jobs
+[] build your super user where you can see the flagged jobs and then decide on their visibility
+[] dynamic links with notification 
+[] checkout the chat notification
+[] dont show articles whose deadlines has passed
+[] create functionality to edit the details of an article if it has not been accepted 
+[] review rating wala system and infrastructure banaiyee
+[] repeat a job with editing capabilities
+[]ongoing gigs
+    []different colors for diff status - unaccepted ongoing completed
+[] gig model
+    [] add number of views to the gig model
+    [] flag variable
+
+
+IN PROGRESS
+[] refresh to all details and hompage etc
+    [.]hompage
+    []job details
+    [.]ongoing
+    [.]history
+    []about - comments
+
+COMPLETED
+[.] bug in job details size ka dikkat hai 

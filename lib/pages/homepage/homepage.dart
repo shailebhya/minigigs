@@ -7,6 +7,7 @@ import 'package:easily/widgets/size_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../services/constants.dart';
 import 'home_ctrl.dart';
 
@@ -20,6 +21,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final homeCtrl = Get.put<HomeCtrl>(HomeCtrl());
+  RefreshController controller = RefreshController();
 
   @override
   void initState() {
@@ -56,7 +58,7 @@ class _HomePageState extends State<HomePage> {
               : Scaffold(
                   key: _scaffoldKey,
                   floatingActionButton: FloatingActionButton.extended(
-                    label: Text(
+                    label: const Text(
                       "new",
                       style: TextStyle(color: Colors.white),
                     ),
@@ -92,8 +94,7 @@ class _HomePageState extends State<HomePage> {
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   scrollable: true,
-                                  title: const Center(
-                                      child: Text('select location')),
+                                  title: const Center(child: Text('location')),
                                   content: Container(
                                       height: 300,
                                       width: 300,
@@ -191,51 +192,59 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.black, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  body: Container(
-                    decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(20),
-                            topLeft: Radius.circular(20))),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GetBuilder<HomeCtrl>(
-                          id: gigsListId,
-                          builder: (_) {
-                            return _.gigsLoading
-                                ? const Center(
-                                    child: CircularProgressIndicator(
-                                        color: Colors.black),
-                                  )
-                                : homeCtrl.gigs.isEmpty
-                                    ? const Center(
-                                        child: Text(
-                                          "well, aren't you lucky,\nbecome the first person to post a gig in this city!",
-                                          style: TextStyle(fontSize: 28),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      )
-                                    : ListView.builder(
-                                        controller: _.gigsListScrollCtrl,
-                                        itemCount: homeCtrl.gigs.length,
-                                        itemBuilder: (context, index) {
-                                          return Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 10.0, vertical: 15),
-                                            child: InkWell(
-                                                onTap: () {
-                                                  Get.to(() => JobDetails(
-                                                      homeCtrl.gigs[index]));
-                                                },
-                                                child: JobCard(
-                                                    homeCtrl.gigs[index],
-                                                    hasImage: homeCtrl
-                                                        .gigs[index]
-                                                        .images!
-                                                        .isNotEmpty)),
-                                          );
-                                        });
-                          }),
+                  body: SmartRefresher(
+                    // color: Colors.black,
+                    // height: SizeConfig.screenHeight * 0.2,
+                    onRefresh: () async => homeCtrl.getGigsPlease(),
+                    controller: controller,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(20),
+                              topLeft: Radius.circular(20))),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: GetBuilder<HomeCtrl>(
+                            id: gigsListId,
+                            builder: (_) {
+                              return _.gigsLoading
+                                  ? const Center(
+                                      child: CircularProgressIndicator(
+                                          color: Colors.black),
+                                    )
+                                  : homeCtrl.gigs.isEmpty
+                                      ? const Center(
+                                          child: Text(
+                                            "well, aren't you lucky,\nbecome the first person to post a gig in this city!",
+                                            style: TextStyle(fontSize: 28),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        )
+                                      : ListView.builder(
+                                          controller: _.gigsListScrollCtrl,
+                                          itemCount: homeCtrl.gigs.length,
+                                          itemBuilder: (context, index) {
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10.0,
+                                                      vertical: 15),
+                                              child: InkWell(
+                                                  onTap: () {
+                                                    Get.to(() => JobDetails(
+                                                        homeCtrl.gigs[index]));
+                                                  },
+                                                  child: JobCard(
+                                                      homeCtrl.gigs[index],
+                                                      hasImage: homeCtrl
+                                                          .gigs[index]
+                                                          .images!
+                                                          .isNotEmpty)),
+                                            );
+                                          });
+                            }),
+                      ),
                     ),
                   ),
                 );

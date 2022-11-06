@@ -19,13 +19,15 @@ class OngoingItem extends StatelessWidget {
       width: Responsive.isDesktop(context)
           ? getProportionateScreenWidth(100)
           : getProportionateScreenWidth(200),
-      decoration: BoxDecoration(boxShadow: [
-        BoxShadow(
-            color: Color.fromARGB(255, 248, 246, 246),
-            blurRadius: 4,
-            offset: Offset(0, 3),
-            spreadRadius: 5),
-      ], color: Colors.white, borderRadius: BorderRadius.circular(15)),
+      decoration: BoxDecoration(
+          // border: Border(bottom: BorderSide(color: Colors.green)),
+          boxShadow: const [
+            BoxShadow(
+                color: Color.fromARGB(255, 248, 246, 246),
+                blurRadius: 4,
+                offset: Offset(0, 3),
+                spreadRadius: 5),
+          ], color: Colors.white, borderRadius: BorderRadius.circular(15)),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -74,6 +76,18 @@ class OngoingItem extends StatelessWidget {
               ),
             ],
           ),
+          SizedBox(
+            height: 10,
+          ),
+          Center(
+            child: Container(
+              // width: SizeConfig.screenWidth * 0.8,
+              height: 1,
+              color: true
+                  ? Colors.green.withOpacity(0.5)
+                  : Colors.red.withOpacity(0.5),
+            ),
+          )
         ]),
       ),
     );

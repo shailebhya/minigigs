@@ -67,6 +67,7 @@ dependencies:
   firebase_messaging: ^11.4.2
   flutter_local_notifications: ^9.6.1
   share_plus: ^4.0.10
+  # liquid_pull_to_refresh: ^3.0.1
   # firebase_phone_auth_handler: ^1.0.3
   # pinput: ^2.2.10
   

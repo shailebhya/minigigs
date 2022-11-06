@@ -194,7 +194,7 @@ class AuthCtrl extends GetxController {
     debugPrint("in checkUserMethod()");
     UserModel? userData = await getUserDataFromHive();
     if (userData == null) {
-      debugPrint("account data not found internally");
+      debugPrint("user account data not found internally");
       isLoading = false;
       update([homePageId]);
       update([sideMenuId]);

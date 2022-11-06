@@ -86,7 +86,8 @@ class AddJobCtrl extends GetxController {
   bool checkData() {
     if (titleCtrl.text.isEmpty ||
         descCtrl.text.isEmpty ||
-        !baseAmtCtrl.text.isNumericOnly ||int.parse(baseAmtCtrl.text)>10000||
+        !baseAmtCtrl.text.isNumericOnly ||
+        int.parse(baseAmtCtrl.text) > 10000 ||
         locationCtrl.text.isEmpty) {
       Get.snackbar(
         "hmmmm..",
@@ -104,7 +105,7 @@ class AddJobCtrl extends GetxController {
     gigModel.description = descCtrl.text;
     gigModel.impData = impDataCtrl.text;
     gigModel.baseAmount = double.parse(baseAmtCtrl.text);
-    gigModel.location = locationCtrl.text;
+    gigModel.location = locationCtrl.text.trim();
     gigModel.createdBy = homeCtrl.authCtrl.user;
     gigModel.createdAt = DateTime.now().toString();
     gigModel.deadline = dateTime.toString();

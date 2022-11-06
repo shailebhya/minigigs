@@ -36,19 +36,21 @@ class _OngoingItemViewState extends State<OngoingItemView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-          backgroundColor: const Color.fromARGB(255, 108, 33, 229),
-          onPressed: () async {
-            if (widget.gig.createdBy != null) {
-              final channel = homeCtrl.authCtrl.client
-                  .channel('messaging', id: widget.gig.id);
-              await channel.watch();
-              Get.to(() => ChatPage(widget.gig,
-                  client: homeCtrl.authCtrl.client, channel: channel));
-            }
-          },
-          icon: const Icon(Icons.chat_bubble),
-          label: const Text("chat")),
+      floatingActionButton: widget.gig.acceptedBy!.id != null
+          ? FloatingActionButton.extended(
+              backgroundColor: const Color.fromARGB(255, 108, 33, 229),
+              onPressed: () async {
+                if (widget.gig.createdBy != null) {
+                  final channel = homeCtrl.authCtrl.client
+                      .channel('messaging', id: widget.gig.id);
+                  await channel.watch();
+                  Get.to(() => ChatPage(widget.gig,
+                      client: homeCtrl.authCtrl.client, channel: channel));
+                }
+              },
+              icon: const Icon(Icons.chat_bubble),
+              label: const Text("chat"))
+          : null,
       appBar: AppBar(
         centerTitle: true,
         shadowColor: Colors.transparent,
@@ -234,7 +236,7 @@ class _OngoingItemViewState extends State<OngoingItemView> {
               children: [
                 const Text("created at: "),
                 Text(
-                  DateFormat('dd, MMM HH:mm')
+                  DateFormat('HH:mm, dd MMM yy')
                       .format(DateTime.parse(widget.gig.createdAt!)),
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 15),
@@ -248,7 +250,7 @@ class _OngoingItemViewState extends State<OngoingItemView> {
               children: [
                 const Text("due at: "),
                 Text(
-                  DateFormat('dd, MMM HH:mm')
+                  DateFormat('HH:mm, dd MMM yy')
                       .format(DateTime.parse(widget.gig.deadline!)),
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 15),
@@ -298,7 +300,7 @@ class _OngoingItemViewState extends State<OngoingItemView> {
 
             Container(
               decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 227, 224, 227),
+                  color: const Color.fromARGB(255, 242, 240, 242),
                   borderRadius: BorderRadius.circular(10)),
               child: Padding(
                   padding: const EdgeInsets.all(12.0),
@@ -337,7 +339,7 @@ class _OngoingItemViewState extends State<OngoingItemView> {
                 ? const SizedBox()
                 : Container(
                     decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 227, 224, 227),
+                        color: const Color.fromARGB(255, 242, 240, 242),
                         borderRadius: BorderRadius.circular(10)),
                     child: Padding(
                         padding: const EdgeInsets.all(12.0),
@@ -366,7 +368,8 @@ class _OngoingItemViewState extends State<OngoingItemView> {
               height: 10,
             ),
             if (widget.gig.acceptedBy!.id == homeCtrl.authCtrl.user.id ||
-                widget.gig.createdBy!.id == homeCtrl.authCtrl.user.id) ...[
+                widget.gig.createdBy!.id == homeCtrl.authCtrl.user.id &&
+                    widget.gig.acceptedBy!.id != null) ...[
               InkWell(
                 onTap: () {
                   showDialog(
@@ -449,7 +452,7 @@ class _OngoingItemViewState extends State<OngoingItemView> {
                                     // homeCtrl.authCtrl
                                     //     .updateUserDb({}, gig.createdBy!);
                                     //*!post review and complete the task
-                                    
+
                                     await homeCtrl.completeGig(widget.gig);
                                     homeCtrl.postReview(
                                         widget.gig.createdBy!.id,

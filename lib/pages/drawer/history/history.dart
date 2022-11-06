@@ -4,6 +4,9 @@ import 'package:easily/pages/homepage/home_ctrl.dart';
 import 'package:easily/services/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+import '../../../widgets/size_config.dart';
 
 class History extends StatefulWidget {
   const History({Key? key}) : super(key: key);
@@ -15,6 +18,8 @@ class History extends StatefulWidget {
 class _HistoryState extends State<History> {
 //if gig . accepted by someone and completed at is not null then status is ongoing
   final homeCtrl = Get.find<HomeCtrl>();
+    RefreshController controller = RefreshController();
+
   @override
   void initState() {
     super.initState();
@@ -27,10 +32,12 @@ class _HistoryState extends State<History> {
         id: historyListId,
         builder: (_) {
           return _.historyGigsLoading
-              ? Center(
-                  child: CircularProgressIndicator(
-                  color: Colors.black,
-                ))
+              ? const Scaffold(
+                  body: Center(
+                      child: CircularProgressIndicator(
+                    color: Colors.black,
+                  )),
+                )
               : Scaffold(
                   appBar: AppBar(
                     title: const Text("history",
@@ -42,19 +49,23 @@ class _HistoryState extends State<History> {
                   ),
                   body: _.historyGigs.isEmpty
                       ? const Center(child: Text("let's make some history 😁"))
-                      : ListView.builder(
-                          itemCount: _.historyGigs.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 15.0, vertical: 15),
-                              child: InkWell(
-                                  onTap: () {
-                                    Get.to(() => const HistoryItemView());
-                                  },
-                                  child: const HistoryItem()),
-                            );
-                          }),
+                      : SmartRefresher(
+                         controller: controller,
+                          onRefresh: () async => initState,
+                          child: ListView.builder(
+                              itemCount: _.historyGigs.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15.0, vertical: 15),
+                                  child: InkWell(
+                                      onTap: () {
+                                        Get.to(() => const HistoryItemView());
+                                      },
+                                      child: const HistoryItem()),
+                                );
+                              }),
+                        ),
                 );
         });
   }

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:confetti/confetti.dart';
 import 'package:dio/dio.dart';
 import 'package:easily/models/gig_model.dart';
@@ -7,10 +5,7 @@ import 'package:easily/models/review_model.dart';
 import 'package:easily/services/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
-
 import '../auth/auth_ctrl.dart';
 
 class HomeCtrl extends GetxController {
@@ -50,6 +45,26 @@ class HomeCtrl extends GetxController {
   RefreshController refreshController =
       RefreshController(initialRefresh: false);
   bool gigsLoading = false;
+
+     getGig(String id) async {
+    debugPrint("in get single gig");
+    var url = "$baseUrl/gigs/getSingleGig/$id";
+    try {
+      var response = await dio.get(url);
+      if (response.statusCode == 200) {
+        debugPrint('response status : 200');
+        // print(response.data);
+        return GigModel.fromJson(response.data);
+      } else {
+        debugPrint('something went wrong');
+        return null;
+      }
+    } catch (e) {
+      debugPrint("error in getiuser  $e");
+      return null;
+    }
+  }
+
 
   Future completeGig(GigModel gig) async {
     debugPrint("in update Gig");
@@ -223,6 +238,10 @@ class HomeCtrl extends GetxController {
     debugPrint(apiUrl);
     try {
       var response = await dio.get(apiUrl);
+      //to deal with first time not able to fetch list 
+      if (response.data.runtimeType != List) {
+         await getGigs(authCtrl.user.cityToSearch ?? cities[selectedCityIndex],);
+      }
       if (response.statusCode == 200 || response.statusCode == 201) {
         List<GigModel> pagList = [];
         if (date == 1) {
